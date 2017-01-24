@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     CallbackManager callbackManager;
 
+    Intent intent = new Intent(this, MapsActivity.class);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +42,13 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 textView.setText("Hello, "/* + Profile.getCurrentProfile().getFirstName()*/);
                 //setText for if you logout successfully too???
+
+
+
+
+
+
+                startActivity(intent);
             }
 
             @Override
@@ -58,5 +67,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data){
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void testButton(View view){
+        startActivity(intent);
     }
 }
