@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     CallbackManager callbackManager;
 
-    Intent intent = new Intent(this, MapsActivity.class);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = (LoginButton) findViewById(R.id.login_button);
         textView = (TextView) findViewById(R.id.textView);
         callbackManager = CallbackManager.Factory.create();
+        final Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testButton(View view){
+        Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
         startActivity(intent);
     }
 }
