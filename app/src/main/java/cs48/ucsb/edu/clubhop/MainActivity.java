@@ -1,5 +1,7 @@
 package cs48.ucsb.edu.clubhop;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -45,12 +47,12 @@ public class MainActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
 
         if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 // No explanation needed, we can request the permission.
 
                 ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
@@ -71,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -79,32 +80,28 @@ public class MainActivity extends AppCompatActivity {
                 //setText for if you logout successfully too???
 
 
-
-
-
-
                 startActivity(intent);
             }
 
             @Override
             public void onCancel() {
-                textView.setText( "Login Cancelled" );
+                textView.setText("Login Cancelled");
             }
 
             @Override
             public void onError(FacebookException error) {
-                textView.setText( "Login Error" );
+                textView.setText("Login Error");
             }
         });
 
     }
 
     @Override
-    protected void onActivityResult( int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void testButton(View view){
+    public void testButton(View view) {
         Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
         startActivity(intent);
     }
