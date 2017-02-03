@@ -3,19 +3,20 @@ package cs48.ucsb.edu.clubhop;
 import android.*;
 import android.Manifest;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.TextView;
+
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,13 +24,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,14 +55,15 @@ public class MapsActivity extends FragmentActivity implements
     protected String mLongitudeLabel;
     protected TextView mLatitudeText;
     protected TextView mLongitudeText;
+    protected Marker curLocMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment)
+        getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         mLocationRequest = LocationRequest.create()
@@ -138,24 +141,21 @@ public class MapsActivity extends FragmentActivity implements
         mMap = googleMap;
 
         // Add a marker on last location and move the camera
-        mGoogleApiClient.connect();
 
         LatLng lastloc;
         if (mLastLocation != null) {
+            mGoogleApiClient.connect();
             lastloc = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            mGoogleApiClient.disconnect();
+
         } else {
             lastloc = new LatLng(34.416106, -119.844280);
         }
 
-        mMap.addMarker(new MarkerOptions().position(lastloc).title("Hello World!"));
-
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(lastloc)
-                .zoom(17)
-                .build();
-
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
-
+        curLocMarker = mMap.addMarker(new MarkerOptions().position(lastloc).title("Hello World!"));
+        //mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(lastloc));
+        mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
 
@@ -185,10 +185,14 @@ public class MapsActivity extends FragmentActivity implements
         double currentLongitude = location.getLongitude();
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
+        if (curLocMarker != null) {
+            curLocMarker.remove();
+        }
+
         MarkerOptions options = new MarkerOptions()
                 .position(latLng)
                 .title("I am here!");
-        mMap.addMarker(options);
+        curLocMarker = mMap.addMarker(options);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 

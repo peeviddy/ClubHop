@@ -10,6 +10,7 @@
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
+        map:cameraZoom="16"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="cs48.ucsb.edu.clubhop.MapsActivity" />
@@ -22,11 +23,14 @@
         android:prompt="@string/Filter"
         android:entries="@array/planets_array"
         android:contentDescription="@string/Filter"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="15dp"
+        android:drawSelectorOnTop="true"
+        android:popupBackground="#e6fff2"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="@color/cast_expanded_controller_ad_container_white_stripe_color"
+        android:background="#e6fff2"
+        android:textAlignment="center"
         android:clipChildren="true" />
 
 

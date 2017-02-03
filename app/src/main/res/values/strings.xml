@@ -5,11 +5,12 @@
     <string name="title_activity_maps">Map</string>
     <string name="Filter">Filter</string>
     <string-array name="planets_array">
-        <item>All</item>
-        <item>Today</item>
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
+        <item> Filter </item>
+        <item> All </item>
+        <item> Today </item>
+        <item> Mercury </item>
+        <item> Venus </item>
+        <item> Earth </item>
     </string-array>
     <string name="latitude_label">Latitude</string>
     <string name="longitude_label">Longitude</string>
@@ -17,4 +18,10 @@
     <string name="no_location_detected">
         No location detected. Make sure location is enabled on the device.
     </string>
+    <string name="title_activity_nav">NavActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
