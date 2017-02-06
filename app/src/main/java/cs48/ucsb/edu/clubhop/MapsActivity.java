@@ -51,10 +51,6 @@ public class MapsActivity extends FragmentActivity implements
     private LocationRequest mLocationRequest;
 
     protected Location mLastLocation;
-    protected String mLatitudeLabel;
-    protected String mLongitudeLabel;
-    protected TextView mLatitudeText;
-    protected TextView mLongitudeText;
     protected Marker curLocMarker;
 
     @Override
@@ -71,10 +67,8 @@ public class MapsActivity extends FragmentActivity implements
                 .setInterval(10 * 1000) //10 seconds in ms
                 .setFastestInterval(1 * 1000); //1 seconds, in ms
 
-        mLatitudeLabel = getResources().getString(R.string.latitude_label);
-        mLongitudeLabel = getResources().getString(R.string.longitude_label);
-        mLatitudeText = (TextView) findViewById((R.id.latitude_text));
-        mLongitudeText = (TextView) findViewById((R.id.longitude_text));
+
+
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)

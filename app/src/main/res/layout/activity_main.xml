@@ -21,30 +21,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome"
+        android:text="Welcome!"
         android:id="@+id/textView"
         android:layout_above="@+id/login_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="41dp" />
-
-    <TextView
-        android:id="@+id/latitude_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:textIsSelectable="true"
-        android:textSize="@dimen/lat_long_text_size" />
-
-    <TextView
-        android:id="@+id/longitude_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="@dimen/text_margin"
-        android:textIsSelectable="true"
-        android:textSize="@dimen/lat_long_text_size" />
+        android:layout_marginBottom="41dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <Button
         android:text="Test without logging in"
