@@ -1,37 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        map:cameraZoom="16"
+    <RelativeLayout
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="cs48.ucsb.edu.clubhop.MapsActivity" />
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:dropDownWidth="match_parent"
-        android:id="@+id/spinner"
-        android:prompt="@string/Filter"
-        android:entries="@array/planets_array"
-        android:contentDescription="@string/Filter"
-        android:drawSelectorOnTop="true"
-        android:popupBackground="#e6fff2"
-        android:layout_marginEnd="17dp"
-        android:background="#e6fff2"
-        android:textAlignment="center"
-        android:clipChildren="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp" />
+        android:orientation="vertical">
 
 
-</RelativeLayout>
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            map:cameraZoom="16"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="cs48.ucsb.edu.clubhop.MapsActivity" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:dropDownWidth="match_parent"
+            android:id="@+id/spinner"
+            android:prompt="@string/Filter"
+            android:entries="@array/planets_array"
+            android:contentDescription="@string/Filter"
+            android:drawSelectorOnTop="true"
+            android:popupBackground="#e6fff2"
+            android:layout_marginEnd="17dp"
+            android:background="#e6fff2"
+            android:textAlignment="center"
+            android:clipChildren="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/navList"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|start"
+        android:background="#ffeeeeee"/>
+
+</android.support.v4.widget.DrawerLayout>

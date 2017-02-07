@@ -24,6 +24,8 @@ import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     LoginButton loginButton;
@@ -76,9 +78,22 @@ public class MainActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                textView.setText("Hello, "/* + Profile.getCurrentProfile().getFirstName()*/);
-                //setText for if you logout successfully too???
 
+                final AccessToken token = AccessToken.getCurrentAccessToken();
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        token,
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                textView.setText( response.getRawResponse() );
+                            }
+                        });
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "name, events"); // literally wont give us events
+                request.setParameters(parameters);
+                request.executeAsync();
 
                 startActivity(intent);
             }
