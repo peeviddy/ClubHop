@@ -151,8 +151,11 @@ public class MapsActivity extends FragmentActivity implements
                 .title("Hello World!")
                 .snippet("I'm a description!! Look at me (>0_0)>")
         );
-        //mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(lastloc));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(lastloc)
+                .zoom(17)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 3000, null);
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
