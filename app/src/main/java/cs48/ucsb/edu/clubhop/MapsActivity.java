@@ -146,7 +146,11 @@ public class MapsActivity extends FragmentActivity implements
             lastloc = new LatLng(34.416106, -119.844280);
         }
 
-        curLocMarker = mMap.addMarker(new MarkerOptions().position(lastloc).title("Hello World!"));
+        curLocMarker = mMap.addMarker(new MarkerOptions()
+                .position(lastloc)
+                .title("Hello World!")
+                .snippet("I'm a description!! Look at me (>0_0)>")
+        );
         //mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(lastloc));
         mMap.getUiSettings().setZoomControlsEnabled(true);

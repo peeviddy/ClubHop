@@ -17,7 +17,7 @@
 
     <Spinner
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         android:dropDownWidth="match_parent"
         android:id="@+id/spinner"
         android:prompt="@string/Filter"
@@ -25,13 +25,13 @@
         android:contentDescription="@string/Filter"
         android:drawSelectorOnTop="true"
         android:popupBackground="#e6fff2"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="17dp"
         android:background="#e6fff2"
         android:textAlignment="center"
-        android:clipChildren="true" />
+        android:clipChildren="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp" />
 
 
 </RelativeLayout>
