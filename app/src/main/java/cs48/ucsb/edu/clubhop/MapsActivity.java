@@ -73,17 +73,10 @@ public class MapsActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setInterval(10 * 1000) //10 seconds in ms
-                .setFastestInterval(1 * 1000); //1 seconds, in ms
-
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -93,8 +86,8 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         // Navigation
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
         addDrawerItems();
@@ -106,9 +99,21 @@ public class MapsActivity extends FragmentActivity implements
 
     }
 
+    //Dummy methods for filter buttons
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        //dummy
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //dummy
+    }
+
     // Helper method to add items and configure the nav list
     private void addDrawerItems() {
-        String[] osArray = { "Android", "iOS", "Windows", "OS X", "Linux" };
+        String[] osArray = {"Android", "iOS", "Windows", "OS X", "Linux"};
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
 
@@ -160,8 +165,6 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
-        mGoogleApiClient.connect();
     }
 
     @Override
@@ -174,29 +177,11 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     protected void onStart() {
-        mGoogleApiClient.connect();
         super.onStart();
     }
 
     protected void onStop() {
-        mGoogleApiClient.disconnect();
         super.onStop();
-    }
-
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            //mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap();
-            }
-        }
-    }
-
-    private void setUpMap() {
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
     /**
@@ -211,29 +196,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker on last location and move the camera
-
-        LatLng lastloc;
-        if (mLastLocation != null) {
-            mGoogleApiClient.connect();
-            lastloc = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            mGoogleApiClient.disconnect();
-
-        } else {
-            lastloc = new LatLng(34.416106, -119.844280);
-        }
-
-        curLocMarker = mMap.addMarker(new MarkerOptions()
-                .position(lastloc)
-                .title("Hello World!")
-                .snippet("I'm a description!! Look at me (>0_0)>")
-        );
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(lastloc)
-                .zoom(17)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 3000, null);
+        mGoogleApiClient.connect();
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
@@ -263,16 +226,17 @@ public class MapsActivity extends FragmentActivity implements
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-
-        if (curLocMarker != null) {
-            curLocMarker.remove();
-        }
-
-        MarkerOptions options = new MarkerOptions()
+        curLocMarker = mMap.addMarker(new MarkerOptions()
                 .position(latLng)
-                .title("I am here!");
-        curLocMarker = mMap.addMarker(options);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                .title("Hi there! I think you're here")
+                .snippet("handleNewLocation() got called so here I am!")
+        );
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(17)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
     @Override
@@ -299,18 +263,9 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        //dummy
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        //dummy
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        mGoogleApiClient.disconnect();
         handleNewLocation(location);
     }
 }
