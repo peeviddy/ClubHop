@@ -48,7 +48,9 @@ public class MapsActivity extends FragmentActivity implements
         OnItemSelectedListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -84,6 +86,7 @@ public class MapsActivity extends FragmentActivity implements
                     .addApi(LocationServices.API)
                     .build();
         }
+
 
         // Navigation
         mDrawerList = (ListView) findViewById(R.id.navList);
@@ -158,12 +161,12 @@ public class MapsActivity extends FragmentActivity implements
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onResume() {
+        mGoogleApiClient.connect();
         super.onResume();
     }
 
@@ -177,10 +180,15 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     protected void onStart() {
+        mGoogleApiClient.connect();
         super.onStart();
     }
 
     protected void onStop() {
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
         super.onStop();
     }
 
@@ -198,6 +206,14 @@ public class MapsActivity extends FragmentActivity implements
         mMap = googleMap;
         mGoogleApiClient.connect();
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMarkerClickListener(this);
+
+        //An example marker for dynamic infowindow generation
+        //has no data other than position
+        Marker example = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(34.413686, -119.859485))
+        );
     }
 
 
@@ -214,6 +230,10 @@ public class MapsActivity extends FragmentActivity implements
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation == null) {
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                    .setInterval(10 * 1000) //10 seconds in ms
+                    .setFastestInterval(1 * 1000); //1 seconds, in ms
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         } else {
             handleNewLocation(mLastLocation);
@@ -236,7 +256,6 @@ public class MapsActivity extends FragmentActivity implements
                 .zoom(17)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
     @Override
@@ -267,5 +286,25 @@ public class MapsActivity extends FragmentActivity implements
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
         handleNewLocation(location);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //open event view activity
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        //ask controller to generate an infowindow and attach it to the marker
+        String title = "An Awesome Event";
+        String desc = "I'm and event description and I'm describing things WUBABLUBADUBDUB";
+        marker.setTitle(title);
+        marker.setSnippet(desc);
+
+
+        // We return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
     }
 }
