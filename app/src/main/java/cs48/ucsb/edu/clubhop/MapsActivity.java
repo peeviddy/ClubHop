@@ -6,17 +6,24 @@ import android.content.IntentSender;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.TextView;
-
-import android.widget.ArrayAdapter;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.widget.Spinner;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+
+// Navigation
+import android.widget.ListView;
+import android.widget.ArrayAdapter;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,7 +48,9 @@ public class MapsActivity extends FragmentActivity implements
         OnItemSelectedListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -53,23 +62,23 @@ public class MapsActivity extends FragmentActivity implements
     protected Location mLastLocation;
     protected Marker curLocMarker;
 
+    // Navigation
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
+
+    // Navigation Toggle switch
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
+    private String mActivityTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment)
-        getSupportFragmentManager().findFragmentById(R.id.map);
+                getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setInterval(10 * 1000) //10 seconds in ms
-                .setFastestInterval(1 * 1000); //1 seconds, in ms
-
-
-
-
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -77,13 +86,88 @@ public class MapsActivity extends FragmentActivity implements
                     .addApi(LocationServices.API)
                     .build();
         }
+
+
+        // Navigation
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mActivityTitle = getTitle().toString();
+
+        addDrawerItems();
+        setupDrawer();
+
+        // Toggle switch in the action bar
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
+
+    }
+
+    //Dummy methods for filter buttons
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        //dummy
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //dummy
+    }
+
+    // Helper method to add items and configure the nav list
+    private void addDrawerItems() {
+        String[] osArray = {"Android", "iOS", "Windows", "OS X", "Linux"};
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mDrawerList.setAdapter(mAdapter);
+
+        // Perform action on nav button click
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MapsActivity.this, "Time for an upgrade!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Helper method for navigation
+    private void setupDrawer() {
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                /*super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle("Navigation!");
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()*/
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {/*
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(mActivityTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()*/
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
-        setUpMapIfNeeded();
         mGoogleApiClient.connect();
+        super.onResume();
     }
 
     @Override
@@ -101,24 +185,11 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            //mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap();
-            }
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
         }
-    }
-
-    private void setUpMap() {
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        super.onStop();
     }
 
     /**
@@ -133,30 +204,16 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker on last location and move the camera
-
-        LatLng lastloc;
-        if (mLastLocation != null) {
-            mGoogleApiClient.connect();
-            lastloc = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            mGoogleApiClient.disconnect();
-
-        } else {
-            lastloc = new LatLng(34.416106, -119.844280);
-        }
-
-        curLocMarker = mMap.addMarker(new MarkerOptions()
-                .position(lastloc)
-                .title("Hello World!")
-                .snippet("I'm a description!! Look at me (>0_0)>")
-        );
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(lastloc)
-                .zoom(17)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 3000, null);
+        mGoogleApiClient.connect();
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMarkerClickListener(this);
+
+        //An example marker for dynamic infowindow generation
+        //has no data other than position
+        Marker example = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(34.413686, -119.859485))
+        );
     }
 
 
@@ -173,6 +230,10 @@ public class MapsActivity extends FragmentActivity implements
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation == null) {
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                    .setInterval(10 * 1000) //10 seconds in ms
+                    .setFastestInterval(1 * 1000); //1 seconds, in ms
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         } else {
             handleNewLocation(mLastLocation);
@@ -185,16 +246,16 @@ public class MapsActivity extends FragmentActivity implements
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-
-        if (curLocMarker != null) {
-            curLocMarker.remove();
-        }
-
-        MarkerOptions options = new MarkerOptions()
+        curLocMarker = mMap.addMarker(new MarkerOptions()
                 .position(latLng)
-                .title("I am here!");
-        curLocMarker = mMap.addMarker(options);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                .title("Hi there! I think you're here")
+                .snippet("handleNewLocation() got called so here I am!")
+        );
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(17)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
     }
 
     @Override
@@ -221,18 +282,29 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        //dummy
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        //dummy
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        mGoogleApiClient.disconnect();
         handleNewLocation(location);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //open event view activity
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        //ask controller to generate an infowindow and attach it to the marker
+        String title = "An Awesome Event";
+        String desc = "I'm and event description and I'm describing things WUBABLUBADUBDUB";
+        marker.setTitle(title);
+        marker.setSnippet(desc);
+
+
+        // We return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
     }
 }
