@@ -1,23 +1,16 @@
 package cs48.ucsb.edu.clubhop;
 
-import android.*;
-import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.TextView;
-import android.support.v4.widget.DrawerLayout.DrawerListener;
-import android.widget.Spinner;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 
 // Navigation
 import android.widget.ListView;
@@ -40,9 +33,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Marker;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         OnItemSelectedListener,
@@ -62,14 +52,18 @@ public class MapsActivity extends FragmentActivity implements
     protected Location mLastLocation;
     protected Marker curLocMarker;
 
+
     // Navigation
+    private DrawerManger drawerManger;
     private ListView mDrawerList;
+    private String[] osArray = {"Android", "iOS", "Windows", "OS X", "Linux"};
     private ArrayAdapter<String> mAdapter;
 
     // Navigation Toggle switch
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +87,9 @@ public class MapsActivity extends FragmentActivity implements
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
+        mAdapter = new ArrayAdapter<String>(MapsActivity.this, android.R.layout.simple_list_item_1, osArray);
+
+        drawerManger = new DrawerManger();
         addDrawerItems();
         setupDrawer();
 
@@ -106,52 +103,21 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        //dummy
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        //dummy
     }
 
     // Helper method to add items and configure the nav list
     private void addDrawerItems() {
-        String[] osArray = {"Android", "iOS", "Windows", "OS X", "Linux"};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
-        mDrawerList.setAdapter(mAdapter);
-
-        // Perform action on nav button click
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MapsActivity.this, "Time for an upgrade!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        drawerManger.addDrawerItems(mDrawerList, mAdapter, MapsActivity.this);
     }
 
     // Helper method for navigation
     private void setupDrawer() {
+        drawerManger.setUp(mDrawerToggle, mDrawerLayout, this);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.string.drawer_open, R.string.drawer_close) {
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                /*super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Navigation!");
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()*/
-            }
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {/*
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mActivityTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()*/
-            }
-        };
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     @Override
@@ -290,7 +256,14 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //open event view activity
+        //Can only pass primitive types through intents so we must get strings from marker first
+        //this EventPageBundler class will have to be separated from the MapsActivity later
+        //it should only communicate with the controller
+        Bundle bundle = new EventPageBundler().makeEventPageBundle(marker);
+
+        Intent eventPageIntent = new Intent(getBaseContext(), EventPageActivity.class);
+        eventPageIntent.putExtra("Bundle", bundle);
+        startActivity(eventPageIntent, bundle);
     }
 
     @Override
@@ -301,10 +274,14 @@ public class MapsActivity extends FragmentActivity implements
         marker.setTitle(title);
         marker.setSnippet(desc);
 
-
         // We return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the
         // marker is centered and for the marker's info window to open, if it has one).
         return false;
+    }
+
+    private class DrawerManager {
+
+
     }
 }
