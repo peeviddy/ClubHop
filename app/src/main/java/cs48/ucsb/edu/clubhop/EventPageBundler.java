@@ -15,7 +15,7 @@ public class EventPageBundler {
         String title = "Title";
         bundle.putString("Title", title);
         String eventType = "Private";
-        bundle.putString("eventType", eventType);
+        bundle.putString("EventType", eventType);
         String time = "1:00 - 2:00";
         bundle.putString("Time", time);
         String location = "Somewhere location in a place above a tree";

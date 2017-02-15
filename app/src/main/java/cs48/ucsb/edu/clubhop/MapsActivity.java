@@ -83,13 +83,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
         // Navigation
-        mDrawerList = (ListView) findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mActivityTitle = getTitle().toString();
-
-        mAdapter = new ArrayAdapter<String>(MapsActivity.this, android.R.layout.simple_list_item_1, osArray);
-
-        drawerManger = new DrawerManger();
+        initDrawer();
         addDrawerItems();
         setupDrawer();
 
@@ -109,6 +103,15 @@ public class MapsActivity extends FragmentActivity implements
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
+    private void initDrawer() {
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mActivityTitle = getTitle().toString();
+
+        mAdapter = new ArrayAdapter<String>(MapsActivity.this, android.R.layout.simple_list_item_1, osArray);
+
+        drawerManger = new DrawerManger();
+    }
     // Helper method to add items and configure the nav list
     private void addDrawerItems() {
         drawerManger.addDrawerItems(mDrawerList, mAdapter, MapsActivity.this);
@@ -256,13 +259,11 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //Can only pass primitive types through intents so we must get strings from marker first
-        //this EventPageBundler class will have to be separated from the MapsActivity later
-        //it should only communicate with the controller
         Bundle bundle = new EventPageBundler().makeEventPageBundle(marker);
+        //above must be extracted to controller
 
-        Intent eventPageIntent = new Intent(getBaseContext(), EventPageActivity.class);
-        eventPageIntent.putExtra("Bundle", bundle);
+        Intent eventPageIntent = new Intent(this, EventPageActivity.class);
+        eventPageIntent.putExtras(bundle);
         startActivity(eventPageIntent, bundle);
     }
 
@@ -278,10 +279,5 @@ public class MapsActivity extends FragmentActivity implements
         // for the default behavior to occur (which is for the camera to move such that the
         // marker is centered and for the marker's info window to open, if it has one).
         return false;
-    }
-
-    private class DrawerManager {
-
-
     }
 }
