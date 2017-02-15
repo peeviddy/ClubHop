@@ -24,12 +24,12 @@ import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
     LoginButton loginButton;
-
     TextView textView;
     CallbackManager callbackManager;
 
@@ -86,7 +86,12 @@ public class MainActivity extends AppCompatActivity {
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                textView.setText( response.getRawResponse() );
+                                try {
+                                    String name = response.getJSONObject().getString("name");
+                                    textView.setText( "Hello, " + name );
+                                } catch ( JSONException e ) {
+                                    textView.setText("Error!");
+                                }
                             }
                         });
 
