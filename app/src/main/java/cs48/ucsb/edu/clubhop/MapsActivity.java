@@ -213,8 +213,6 @@ public class MapsActivity extends FragmentActivity implements
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
         curLocMarker = mMap.addMarker(new MarkerOptions()
                 .position(latLng)
-                .title("Hi there! I think you're here")
-                .snippet("handleNewLocation() got called so here I am!")
         );
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latLng)
