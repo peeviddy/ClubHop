@@ -9,9 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-/**
- * Created by Joel on 2/10/2017.
- */
 
 public class DrawerManger {
 
