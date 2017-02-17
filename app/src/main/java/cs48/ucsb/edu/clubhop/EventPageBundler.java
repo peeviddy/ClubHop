@@ -10,7 +10,7 @@ import com.google.android.gms.maps.model.Marker;
 
 public class EventPageBundler {
 
-    public Bundle makeEventPageBundle(Marker marker) {
+    public Bundle makeBundle(Marker marker) {
         Bundle bundle = new Bundle(5);
         String title = "An Event Title";
         bundle.putString("Title", title);

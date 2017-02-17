@@ -1,6 +1,5 @@
 package cs48.ucsb.edu.clubhop;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
@@ -17,7 +16,6 @@ import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -253,7 +251,7 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Bundle bundle = new EventPageBundler().makeEventPageBundle(marker);
+        Bundle bundle = new EventPageBundler().makeBundle(marker);
         //above must be extracted to controller
 
         Intent eventPageIntent = new Intent(this, EventPageActivity.class);

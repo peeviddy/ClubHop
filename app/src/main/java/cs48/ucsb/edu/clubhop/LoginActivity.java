@@ -26,12 +26,13 @@ import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     LoginButton loginButton;
 
     TextView textView;
     CallbackManager callbackManager;
+
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
@@ -70,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
                 request.setParameters(parameters);
                 request.executeAsync();
 
-                Bundle userBundle = new Bundle();
+                //ASSUMING USER ID CAN BE STORED AS A STRING
+                String userId = "";//placeholder
+                Bundle userBundle = new UserInfoBundler().makeBundle(userId);
 
-
-                //userBundle.putString("UserId","I dont event know if its a string but figure it out");
                 startActivity(intent, userBundle);
             }
 
