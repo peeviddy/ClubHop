@@ -7,15 +7,16 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 // Navigation
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,7 +34,6 @@ import com.google.android.gms.maps.model.Marker;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
-        OnItemSelectedListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
@@ -44,8 +44,8 @@ public class MapsActivity extends FragmentActivity implements
     private GoogleApiClient mGoogleApiClient;
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private LocationRequest mLocationRequest;
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9001;
+
 
     protected Location mLastLocation;
     protected Marker curLocMarker;
@@ -53,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
     // Navigation
-    private DrawerManger drawerManger;
+    private DrawerHandler drawerHandler;
     private ListView mDrawerList;
     private String[] osArray = {"Android", "iOS", "Windows", "OS X", "Linux"};
     private ArrayAdapter<String> mAdapter;
@@ -80,6 +80,20 @@ public class MapsActivity extends FragmentActivity implements
                     .build();
         }
 
+        //Spinner(filter menu)
+        Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
+        filterMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Toast.makeText(getBaseContext(), parentView.getItemAtPosition(position) + " is selected", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
 
         // Navigation
         initDrawer();
@@ -89,17 +103,6 @@ public class MapsActivity extends FragmentActivity implements
         // Toggle switch in the action bar
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setHomeButtonEnabled(true);
-
-    }
-
-    //Dummy methods for filter buttons
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
     }
 
     private void initDrawer() {
@@ -109,17 +112,17 @@ public class MapsActivity extends FragmentActivity implements
 
         mAdapter = new ArrayAdapter<String>(MapsActivity.this, android.R.layout.simple_list_item_1, osArray);
 
-        drawerManger = new DrawerManger();
+        drawerHandler = new DrawerHandler();
     }
 
     // Helper method to add items and configure the nav list
     private void addDrawerItems() {
-        drawerManger.addDrawerItems(mDrawerList, mAdapter, MapsActivity.this);
+        drawerHandler.addDrawerItems(mDrawerList, mAdapter, MapsActivity.this);
     }
 
     // Helper method for navigation
     private void setupDrawer() {
-        drawerManger.setUp(mDrawerToggle, mDrawerLayout, this);
+        drawerHandler.setUp(mDrawerToggle, mDrawerLayout, this);
     }
 
     @Override
@@ -202,7 +205,7 @@ public class MapsActivity extends FragmentActivity implements
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation == null) {
-            mLocationRequest = LocationRequest.create()
+            LocationRequest mLocationRequest = new LocationRequest().create()
                     .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
                     .setInterval(10 * 1000) //10 seconds in ms
                     .setFastestInterval(1 * 1000); //1 seconds, in ms

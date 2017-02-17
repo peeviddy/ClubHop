@@ -12,5 +12,4 @@ import com.google.android.gms.maps.model.Marker;
  */
 public abstract class AbstractMarkerOptions {
     abstract MarkerOptions generate(LatLng latLng);
-
 }
