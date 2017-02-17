@@ -12,7 +12,7 @@ public class EventPageBundler {
 
     public Bundle makeEventPageBundle(Marker marker) {
         Bundle bundle = new Bundle(5);
-        String title = "Title";
+        String title = "An Event Title";
         bundle.putString("Title", title);
         String eventType = "Private";
         bundle.putString("EventType", eventType);
