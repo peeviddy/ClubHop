@@ -8,9 +8,10 @@ import android.os.Bundle;
 
 public class UserInfoBundler {
 
-    public Bundle makeBundle(String userId) {
+    public Bundle makeBundle(User user) {
         Bundle bundle = new Bundle();
-        bundle.putString("UserID", userId);
+        bundle.putString("UserID", user.getID());
+        bundle.putString("Name", user.getName());
         return bundle;
     }
 }

@@ -49,6 +49,7 @@ public class MapsActivity extends FragmentActivity implements
 
     protected Location mLastLocation;
     protected Marker curLocMarker;
+    private Boolean locRetreived = false;
 
 
     // Navigation
@@ -110,6 +111,7 @@ public class MapsActivity extends FragmentActivity implements
 
         drawerManger = new DrawerManger();
     }
+
     // Helper method to add items and configure the nav list
     private void addDrawerItems() {
         drawerManger.addDrawerItems(mDrawerList, mAdapter, MapsActivity.this);
@@ -118,7 +120,6 @@ public class MapsActivity extends FragmentActivity implements
     // Helper method for navigation
     private void setupDrawer() {
         drawerManger.setUp(mDrawerToggle, mDrawerLayout, this);
-
     }
 
     @Override
@@ -133,7 +134,7 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     protected void onResume() {
-        mGoogleApiClient.connect();
+        if (!locRetreived) mGoogleApiClient.connect();
         super.onResume();
     }
 
@@ -147,7 +148,7 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     protected void onStart() {
-        mGoogleApiClient.connect();
+        if (!locRetreived) mGoogleApiClient.connect();
         super.onStart();
     }
 
@@ -176,11 +177,19 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
 
-        //An example marker for dynamic infowindow generation
-        //has no data other than position
-        Marker example = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(34.413686, -119.859485))
-        );
+        // TODO: 2/17/2017 Marker CREATION will have to be done by controller, but will be added to map by this activity
+        //Example markers
+        Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()
+                .generate(new LatLng(34.412723, -119.861915)));
+
+        Marker publicEx = mMap.addMarker(new PublicMarkerOptions()
+                .generate(new LatLng(34.411271, -119.856207)));
+
+        Marker commEx = mMap.addMarker(new CommunityMarkerOptions()
+                .generate(new LatLng(34.413122, -119.857826)));
+
+        Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
+                .generate(new LatLng(34.413686, -119.859485)));
     }
 
 
@@ -199,6 +208,7 @@ public class MapsActivity extends FragmentActivity implements
                     .setFastestInterval(1 * 1000); //1 seconds, in ms
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         } else {
+            locRetreived = true;
             handleNewLocation(mLastLocation);
         }
     }
@@ -246,13 +256,14 @@ public class MapsActivity extends FragmentActivity implements
     public void onLocationChanged(Location location) {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
+        locRetreived = true;
         handleNewLocation(location);
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        // TODO: 2/17/2017 Reroute following method call through controller
         Bundle bundle = new EventPageBundler().makeBundle(marker);
-        //above must be extracted to controller
 
         Intent eventPageIntent = new Intent(this, EventPageActivity.class);
         eventPageIntent.putExtras(bundle);
@@ -261,11 +272,8 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        //ask controller to generate an infowindow and attach it to the marker
-        String title = "An Awesome Event";
-        String desc = "I'm and event description and I'm describing things WUBABLUBADUBDUB";
-        marker.setTitle(title);
-        marker.setSnippet(desc);
+        // TODO: 2/17/2017 Reroute following method call through controller
+        new InfoWindowConfigurator().config(marker);
 
         // We return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the

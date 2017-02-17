@@ -72,8 +72,8 @@ public class LoginActivity extends AppCompatActivity {
                 request.executeAsync();
 
                 //ASSUMING USER ID CAN BE STORED AS A STRING
-                String userId = "";//placeholder
-                Bundle userBundle = new UserInfoBundler().makeBundle(userId);
+                User user = new User("123PLACEHOLDER", "John Doe");
+                Bundle userBundle = new UserInfoBundler().makeBundle(user);
 
                 startActivity(intent, userBundle);
             }
