@@ -81,31 +81,9 @@ public class MainActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-                final AccessToken token = AccessToken.getCurrentAccessToken();
-                //Set<String> permissions = token.getPermissions();
-                //textView.setText( permissions.toString() );
-
-                GraphRequest request = GraphRequest.newMeRequest(
-                        token,
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                try {
-                                    String s = response.getJSONObject().getString("events");
-                                    textView.setText( s );
-                                } catch ( JSONException e ) {
-                                    textView.setText("Error!");
-                                }
-                            }
-                        });
-
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "events"); // literally wont give us events
-                request.setParameters(parameters);
-                request.executeAsync();
-
-                //startActivity(intent);*/
+                JSONWrapper events = new JSONWrapper();
+                textView.setText(events.getContent( 0, "name" ));
+                //startActivity(intent);
             }
 
             @Override
