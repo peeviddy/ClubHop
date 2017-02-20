@@ -27,6 +27,8 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Set;
+
 public class MainActivity extends AppCompatActivity {
 
     LoginButton loginButton;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("user_events");
         textView = (TextView) findViewById(R.id.textView);
         callbackManager = CallbackManager.Factory.create();
         final Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
@@ -80,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
 
                 final AccessToken token = AccessToken.getCurrentAccessToken();
+                //Set<String> permissions = token.getPermissions();
+                //textView.setText( permissions.toString() );
 
                 GraphRequest request = GraphRequest.newMeRequest(
                         token,
@@ -87,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 try {
-                                    String name = response.getJSONObject().getString("name");
-                                    textView.setText( "Hello, " + name );
+                                    String s = response.getJSONObject().getString("events");
+                                    textView.setText( s );
                                 } catch ( JSONException e ) {
                                     textView.setText("Error!");
                                 }
@@ -96,11 +101,11 @@ public class MainActivity extends AppCompatActivity {
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "name, events"); // literally wont give us events
+                parameters.putString("fields", "events"); // literally wont give us events
                 request.setParameters(parameters);
                 request.executeAsync();
 
-                startActivity(intent);
+                //startActivity(intent);*/
             }
 
             @Override
