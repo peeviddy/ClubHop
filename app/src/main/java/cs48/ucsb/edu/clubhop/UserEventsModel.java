@@ -41,5 +41,9 @@ public class UserEventsModel {
         return events.get(index);
     }
 
+    public int getSize() {
+        return events.size();
+    }
+
     public boolean isCreated() { return isCreated; }
 }

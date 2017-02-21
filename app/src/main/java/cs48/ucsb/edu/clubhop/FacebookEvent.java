@@ -13,21 +13,23 @@ public class FacebookEvent {
     private String description;
     int id;
     FacebookLocation location;
+    private String type;
+    private String startTime;
+    private String endTime;
+    private String pictureURL;
 
     FacebookEvent(JSONObject eventObject) {
 
         try {
-            //this.jsonObject = jsonObject;
-            // title = json.getTitle();
+
             title = eventObject.getString("name");
-
-            // description = json.getDescription();
             description = eventObject.getString("description");
-
-            // location = json.getLocation();
             location = new FacebookLocation(eventObject.getJSONObject("place"));
-
             id = eventObject.getInt("id");
+            type = eventObject.getString("type");
+            startTime = eventObject.getString("start_time");
+            endTime = eventObject.getString("end_time");
+            pictureURL = eventObject.getJSONObject("picture").getJSONObject("data").getString("url");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -49,5 +51,21 @@ public class FacebookEvent {
 
     public int getId() {
         return id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public String getPictureURL() {
+        return pictureURL;
     }
 }

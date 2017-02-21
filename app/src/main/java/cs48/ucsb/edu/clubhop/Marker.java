@@ -1,6 +1,7 @@
 package cs48.ucsb.edu.clubhop;
 
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.vision.face.Face;
 
 /**
  * App defined Marker object for storing a google maps marker
@@ -13,7 +14,7 @@ public class Marker {
      *
      * @param event the event associated with the marker
      */
-    public Marker(Event event) {
+    public Marker(FacebookEvent event) {
         //options = new MarkerOptionsFactory().getOptions(event);
     }
 

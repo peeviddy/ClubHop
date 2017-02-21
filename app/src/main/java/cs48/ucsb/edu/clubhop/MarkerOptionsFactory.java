@@ -1,5 +1,6 @@
 package cs48.ucsb.edu.clubhop;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
@@ -8,25 +9,20 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MarkerOptionsFactory {
 
-    /*Will create options based on type of event, can later change to take an arg of event type instead
-    public MarkerOptions getOptions(Event event){
-        *//* TODO: 2/17/2017 Obviously everything related to event objects is placeholder stuff and will need to be fixed
+    public MarkerOptions getOptions(FacebookEvent event) {
 
-        EventType type = event.getType();
-        if(type == publicEvent){
-            return new PublicMarkerOptions().generate(event.getLoc());
-        }
-        else if(type == privateEvent){
-            return new PrivateMarkerOptions().generate(event.getLoc());
-        }
-        else if(type == communityEvent){
-            return new CommunityMarkerOptions().generate(event.getLoc());
-        }
-        else if(type == groupEvent){
-            return new GroupMarkerOptions().generate(event.getLoc());
+        String type = event.getType();
+        if (type.equals("public")) {
+            return new PublicMarkerOptions().generate(event);
+        } else if (type.equals("private")) {
+            return new PrivateMarkerOptions().generate(event);
+        } else if (type.equals("community")) {
+            return new CommunityMarkerOptions().generate(event);
+        } else if (type.equals("group")) {
+            return new GroupMarkerOptions().generate(event);
         }
         else {
-            return new MarkerOptions().position(event.getLoc());
+            return new MarkerOptions().position(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
         }
-    }*/
+    }
 }

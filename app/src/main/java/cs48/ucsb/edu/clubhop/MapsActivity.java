@@ -179,8 +179,9 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
 
-        // TODO: 2/17/2017 Marker CREATION will have to be done by controller, but will be added to map by this activity
         //Example markers
+        Controller.setupMap(mMap);
+        /*
         Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()
                 .generate(new LatLng(34.412723, -119.861915)));
 
@@ -192,6 +193,7 @@ public class MapsActivity extends FragmentActivity implements
 
         Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
                 .generate(new LatLng(34.413686, -119.859485)));
+        */
     }
 
 
