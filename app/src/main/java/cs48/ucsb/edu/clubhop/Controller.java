@@ -7,7 +7,7 @@ import com.google.android.gms.maps.GoogleMap;
  */
 
 public class Controller {
-    private static UserEventsModel model;
+    private static UserEventsModel model = UserEventsModel.getInstance();
     //private static GoogleMap map;
 
     public static void setModel(UserEventsModel events) {
@@ -28,10 +28,12 @@ public class Controller {
     }
     */
 
+    /*
     public static void setupMap(GoogleMap map) {
         for (int i = 0; i < model.getSize(); ++i) {
             map.addMarker(new MarkerOptionsFactory().getOptions(model.getEvent(i)));
         }
     }
+    */
 
 }

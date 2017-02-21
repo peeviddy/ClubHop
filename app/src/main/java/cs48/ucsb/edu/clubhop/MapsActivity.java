@@ -39,7 +39,7 @@ public class MapsActivity extends FragmentActivity implements
         LocationListener,
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnMarkerClickListener {
-
+    private boolean receivedEvents = false;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
@@ -66,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment)
@@ -98,6 +99,20 @@ public class MapsActivity extends FragmentActivity implements
         initDrawer();
         addDrawerItems();
         setupDrawer();
+
+        // Setting up the listener
+        UserEventsModel.getInstance().setOnChangeListener(new UserEventsModel.OnChangeListener() {
+            @Override
+            public void onChange() {
+                receivedEvents = true;
+                if (mMap != null) {
+                    UserEventsModel model = UserEventsModel.getInstance();
+                    for (int i = 0; i < model.getSize(); ++i) {
+                        mMap.addMarker(new MarkerOptionsFactory().getOptions(model.getEvent(i)));
+                    }
+                }
+            }
+        });
 
         // Toggle switch in the action bar
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -180,7 +195,7 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnMarkerClickListener(this);
 
         //Example markers
-        Controller.setupMap(mMap);
+        //Controller.setupMap(mMap);
         /*
         Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()
                 .generate(new LatLng(34.412723, -119.861915)));
@@ -194,6 +209,13 @@ public class MapsActivity extends FragmentActivity implements
         Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
                 .generate(new LatLng(34.413686, -119.859485)));
         */
+
+        if(receivedEvents) {
+            UserEventsModel model = UserEventsModel.getInstance();
+            for (int i = 0; i < model.getSize(); ++i) {
+                mMap.addMarker(new MarkerOptionsFactory().getOptions(model.getEvent(i)));
+            }
+        }
     }
 
 

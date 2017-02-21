@@ -19,11 +19,20 @@ import java.util.ArrayList;
 public class UserEventsModel {
     private boolean isCreated = false;
 
+    private OnChangeListener listener;
+
     //JSONArray events;
     private ArrayList<FacebookEvent> events = new ArrayList<>();
 
-    public UserEventsModel(JSONArray eventArray) {
+    private static UserEventsModel instance;
 
+    public static UserEventsModel getInstance() {
+        if (instance == null)
+            instance = new UserEventsModel();
+        return instance;
+    }
+
+    public void loadJSON(JSONArray eventArray) {
         for (int i = 0; i < eventArray.length(); ++i) {
             try {
                 FacebookEvent e = new FacebookEvent(eventArray.getJSONObject(i));
@@ -32,9 +41,15 @@ public class UserEventsModel {
                 e1.printStackTrace();
             }
         }
+        listener.onChange();
+    }
 
-        isCreated = true;
+    private UserEventsModel() {
 
+    }
+
+    public interface OnChangeListener {
+        void onChange();
     }
 
     public FacebookEvent getEvent(int index) {
@@ -46,4 +61,6 @@ public class UserEventsModel {
     }
 
     public boolean isCreated() { return isCreated; }
+
+    public void setOnChangeListener(OnChangeListener listener) { this.listener = listener; }
 }

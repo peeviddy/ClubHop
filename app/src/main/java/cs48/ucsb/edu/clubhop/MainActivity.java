@@ -97,13 +97,14 @@ public class MainActivity extends AppCompatActivity {
 
                                 try {
                                     content = response.getJSONObject().getJSONObject("events").getJSONArray("data");
+                                    /*
                                     while (content == null) {
                                         textView.setText("null");
-                                    }
-                                    textView.setText("not null");
-                                    userEventsModel = new UserEventsModel( content ); // can't access this outside of the onCompleted
-                                    testString = userEventsModel.getEvent(0).getTitle();
-                                    textView.setText(testString);
+                                    }*/
+                                    //textView.setText("not null");
+                                    UserEventsModel.getInstance().loadJSON(content); // can't access this outside of the onCompleted
+                                    //testString = userEventsModel.getEvent(0).getTitle();
+                                    //textView.setText(testString);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -117,8 +118,9 @@ public class MainActivity extends AppCompatActivity {
                 request.setParameters(parameters);
                 //request.executeAndWait();
                 request.executeAsync(); // request is not executed immediate which is why userEventsModel gets NullPointerException
-                if ( testString == null ) textView.setText("testString is null");
-                textView.setText(testString);
+
+                //if ( testString == null ) textView.setText("testString is null");
+                //textView.setText(testString);
 
                 /*if (content == null) {
                     textView.setText("reverted to null");

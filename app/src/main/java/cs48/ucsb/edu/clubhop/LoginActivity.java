@@ -24,12 +24,14 @@ import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
     LoginButton loginButton;
-
+    JSONArray content;
     TextView textView;
     CallbackManager callbackManager;
 
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("user_events");
         textView = (TextView) findViewById(R.id.textView);
         callbackManager = CallbackManager.Factory.create();
         final Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
@@ -62,7 +65,13 @@ public class LoginActivity extends AppCompatActivity {
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                textView.setText( response.getRawResponse() );
+                                try {
+                                    content = response.getJSONObject().getJSONObject("events").getJSONArray("data");
+                                    UserEventsModel.getInstance().loadJSON(content);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                //textView.setText( response.getRawResponse() );
                             }
                         });
 
@@ -72,10 +81,10 @@ public class LoginActivity extends AppCompatActivity {
                 request.executeAsync();
 
                 //ASSUMING USER ID CAN BE STORED AS A STRING
-                User user = new User("123PLACEHOLDER", "John Doe");
-                Bundle userBundle = new UserInfoBundler().makeBundle(user);
-
-                startActivity(intent, userBundle);
+                //User user = new User("123PLACEHOLDER", "John Doe");
+                //Bundle userBundle = new UserInfoBundler().makeBundle(user);
+                startActivity(intent);
+                //startActivity(intent, userBundle);
             }
 
             @Override
