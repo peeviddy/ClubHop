@@ -5,12 +5,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="Filter">Filter</string>
     <string-array name="planets_array">
-        <item> Filter </item>
         <item> All </item>
         <item> Today </item>
-        <item> Mercury </item>
-        <item> Venus </item>
-        <item> Earth </item>
     </string-array>
     <string name="latitude_label">Latitude</string>
     <string name="longitude_label">Longitude</string>

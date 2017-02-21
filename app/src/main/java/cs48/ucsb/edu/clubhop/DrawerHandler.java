@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-public class DrawerManger {
+public class DrawerHandler {
 
     public void addDrawerItems(ListView mDrawerList,
                                ArrayAdapter<String> mAdapter,
