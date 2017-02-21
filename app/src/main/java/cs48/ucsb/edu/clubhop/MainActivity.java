@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText("reverted to null");
                 }*/
 
-                //startActivity(intent);
+                startActivity(intent);
             }
 
             @Override
