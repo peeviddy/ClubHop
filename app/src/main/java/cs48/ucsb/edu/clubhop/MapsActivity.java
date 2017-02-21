@@ -1,6 +1,5 @@
 package cs48.ucsb.edu.clubhop;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
@@ -8,15 +7,15 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 // Navigation
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,7 +34,6 @@ import com.google.android.gms.maps.model.Marker;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
-        OnItemSelectedListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
@@ -46,15 +44,15 @@ public class MapsActivity extends FragmentActivity implements
     private GoogleApiClient mGoogleApiClient;
 
     public static final String TAG = MapsActivity.class.getSimpleName();
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private LocationRequest mLocationRequest;
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9001;
+
 
     protected Location mLastLocation;
     protected Marker curLocMarker;
-
+    private Boolean locRetreived = false;
 
     // Navigation
-    private DrawerManger drawerManger;
+    private DrawerHandler drawerHandler;
     private ListView mDrawerList;
     private String[] osArray = {"Android", "iOS", "Windows", "OS X", "Linux"};
     private ArrayAdapter<String> mAdapter;
@@ -81,6 +79,20 @@ public class MapsActivity extends FragmentActivity implements
                     .build();
         }
 
+        //Spinner(filter menu)
+        Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
+        filterMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Toast.makeText(getBaseContext(), parentView.getItemAtPosition(position) + " is selected", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
 
         // Navigation
         initDrawer();
@@ -90,17 +102,6 @@ public class MapsActivity extends FragmentActivity implements
         // Toggle switch in the action bar
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setHomeButtonEnabled(true);
-
-    }
-
-    //Dummy methods for filter buttons
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
     }
 
     private void initDrawer() {
@@ -110,17 +111,17 @@ public class MapsActivity extends FragmentActivity implements
 
         mAdapter = new ArrayAdapter<String>(MapsActivity.this, android.R.layout.simple_list_item_1, osArray);
 
-        drawerManger = new DrawerManger();
+        drawerHandler = new DrawerHandler();
     }
+
     // Helper method to add items and configure the nav list
     private void addDrawerItems() {
-        drawerManger.addDrawerItems(mDrawerList, mAdapter, MapsActivity.this);
+        drawerHandler.addDrawerItems(mDrawerList, mAdapter, MapsActivity.this);
     }
 
     // Helper method for navigation
     private void setupDrawer() {
-        drawerManger.setUp(mDrawerToggle, mDrawerLayout, this);
-
+        drawerHandler.setUp(mDrawerToggle, mDrawerLayout, this);
     }
 
     @Override
@@ -135,7 +136,7 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     protected void onResume() {
-        mGoogleApiClient.connect();
+        if (!locRetreived) mGoogleApiClient.connect();
         super.onResume();
     }
 
@@ -149,7 +150,7 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     protected void onStart() {
-        mGoogleApiClient.connect();
+        if (!locRetreived) mGoogleApiClient.connect();
         super.onStart();
     }
 
@@ -178,11 +179,21 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
 
-        //An example marker for dynamic infowindow generation
-        //has no data other than position
-        Marker example = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(34.413686, -119.859485))
-        );
+        //Example markers
+        Controller.setupMap(mMap);
+        /*
+        Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()
+                .generate(new LatLng(34.412723, -119.861915)));
+
+        Marker publicEx = mMap.addMarker(new PublicMarkerOptions()
+                .generate(new LatLng(34.411271, -119.856207)));
+
+        Marker commEx = mMap.addMarker(new CommunityMarkerOptions()
+                .generate(new LatLng(34.413122, -119.857826)));
+
+        Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
+                .generate(new LatLng(34.413686, -119.859485)));
+        */
     }
 
 
@@ -195,12 +206,13 @@ public class MapsActivity extends FragmentActivity implements
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation == null) {
-            mLocationRequest = LocationRequest.create()
+            LocationRequest mLocationRequest = new LocationRequest().create()
                     .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
                     .setInterval(10 * 1000) //10 seconds in ms
                     .setFastestInterval(1 * 1000); //1 seconds, in ms
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         } else {
+            locRetreived = true;
             handleNewLocation(mLastLocation);
         }
     }
@@ -248,13 +260,14 @@ public class MapsActivity extends FragmentActivity implements
     public void onLocationChanged(Location location) {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
+        locRetreived = true;
         handleNewLocation(location);
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Bundle bundle = new EventPageBundler().makeEventPageBundle(marker);
-        //above must be extracted to controller
+        // TODO: 2/17/2017 Reroute following method call through controller
+        Bundle bundle = new EventPageBundler().makeBundle(marker);
 
         Intent eventPageIntent = new Intent(this, EventPageActivity.class);
         eventPageIntent.putExtras(bundle);
@@ -263,11 +276,8 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        //ask controller to generate an infowindow and attach it to the marker
-        String title = "An Awesome Event";
-        String desc = "I'm and event description and I'm describing things WUBABLUBADUBDUB";
-        marker.setTitle(title);
-        marker.setSnippet(desc);
+        // TODO: 2/17/2017 Reroute following method call through controller
+        new InfoWindowConfigurator().config(marker);
 
         // We return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the

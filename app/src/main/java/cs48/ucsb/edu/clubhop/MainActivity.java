@@ -4,6 +4,7 @@ import android.*;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.camera2.params.Face;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -24,14 +26,21 @@ import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
     LoginButton loginButton;
     TextView textView;
     CallbackManager callbackManager;
+    UserEventsModel userEventsModel;
+    JSONArray content;
+    String testString;
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
@@ -44,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("user_events");
         textView = (TextView) findViewById(R.id.textView);
         callbackManager = CallbackManager.Factory.create();
         final Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
@@ -78,27 +88,41 @@ public class MainActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
                 final AccessToken token = AccessToken.getCurrentAccessToken();
-
                 GraphRequest request = GraphRequest.newMeRequest(
                         token,
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
+
                                 try {
-                                    String name = response.getJSONObject().getString("name");
-                                    textView.setText( "Hello, " + name );
-                                } catch ( JSONException e ) {
-                                    textView.setText("Error!");
+                                    content = response.getJSONObject().getJSONObject("events").getJSONArray("data");
+                                    while (content == null) {
+                                        textView.setText("null");
+                                    }
+                                    textView.setText("not null");
+                                    userEventsModel = new UserEventsModel( content ); // can't access this outside of the onCompleted
+                                    testString = userEventsModel.getEvent(0).getTitle();
+                                    textView.setText(testString);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
+
+
                             }
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "name, events"); // literally wont give us events
+                parameters.putString("fields", "events");
                 request.setParameters(parameters);
-                request.executeAsync();
+                //request.executeAndWait();
+                request.executeAsync(); // request is not executed immediate which is why userEventsModel gets NullPointerException
+                if ( testString == null ) textView.setText("testString is null");
+                textView.setText(testString);
+
+                /*if (content == null) {
+                    textView.setText("reverted to null");
+                }*/
 
                 startActivity(intent);
             }
@@ -112,7 +136,15 @@ public class MainActivity extends AppCompatActivity {
             public void onError(FacebookException error) {
                 textView.setText("Login Error");
             }
+
         });
+
+        /*if (content == null) {
+            textView.setText("reverted to null");
+        }*/
+
+        //textView.setText( userEventsModel.getEvent(0).getTitle() ); // insta-crash
+
 
     }
 
