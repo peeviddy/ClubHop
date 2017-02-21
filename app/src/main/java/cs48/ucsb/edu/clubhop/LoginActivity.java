@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
+    final private int RANDOMTHINGTOMAKEACHANGE = 123123123;
 
 
     @Override
