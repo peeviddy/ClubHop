@@ -52,7 +52,6 @@ public class MapsActivity extends FragmentActivity implements
     protected Location mLastLocation;
     protected Marker curLocMarker;
 
-
     // Navigation
     private DrawerManger drawerManger;
     private ListView mDrawerList;

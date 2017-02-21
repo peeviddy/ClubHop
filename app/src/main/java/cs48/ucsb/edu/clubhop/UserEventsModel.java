@@ -17,6 +17,7 @@ import java.util.ArrayList;
  */
 
 public class UserEventsModel {
+    private boolean isCreated = false;
 
     //JSONArray events;
     private ArrayList<FacebookEvent> events = new ArrayList<>();
@@ -32,9 +33,13 @@ public class UserEventsModel {
             }
         }
 
+        isCreated = true;
+
     }
 
     public FacebookEvent getEvent(int index) {
         return events.get(index);
     }
+
+    public boolean isCreated() { return isCreated; }
 }

@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     CallbackManager callbackManager;
     UserEventsModel userEventsModel;
+    JSONArray content;
+    String testString;
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
@@ -94,12 +96,14 @@ public class MainActivity extends AppCompatActivity {
                             public void onCompleted(JSONObject object, GraphResponse response) {
 
                                 try {
-                                    JSONArray content;
                                     content = response.getJSONObject().getJSONObject("events").getJSONArray("data");
-                                    userEventsModel = new UserEventsModel( content );
-                                    textView.setText( userEventsModel.getEvent(0).getTitle() );
-
-
+                                    while (content == null) {
+                                        textView.setText("null");
+                                    }
+                                    textView.setText("not null");
+                                    userEventsModel = new UserEventsModel( content ); // can't access this outside of the onCompleted
+                                    testString = userEventsModel.getEvent(0).getTitle();
+                                    textView.setText(testString);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -111,7 +115,15 @@ public class MainActivity extends AppCompatActivity {
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "events");
                 request.setParameters(parameters);
-                request.executeAsync();
+                //request.executeAndWait();
+                request.executeAsync(); // request is not executed immediate which is why userEventsModel gets NullPointerException
+                if ( testString == null ) textView.setText("testString is null");
+                textView.setText(testString);
+
+                /*if (content == null) {
+                    textView.setText("reverted to null");
+                }*/
+
                 //startActivity(intent);
             }
 
@@ -124,7 +136,15 @@ public class MainActivity extends AppCompatActivity {
             public void onError(FacebookException error) {
                 textView.setText("Login Error");
             }
+
         });
+
+        /*if (content == null) {
+            textView.setText("reverted to null");
+        }*/
+
+        //textView.setText( userEventsModel.getEvent(0).getTitle() ); // insta-crash
+
 
     }
 
