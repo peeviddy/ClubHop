@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setReadPermissions("user_events");
         textView = (TextView) findViewById(R.id.textView);
         callbackManager = CallbackManager.Factory.create();
-        final Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
+        final Intent intent = new Intent(this, MapsActivity.class);
 
         checkPermission();
 
@@ -133,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void testButton(View view) {
-        Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 }
