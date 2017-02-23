@@ -4,12 +4,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by patrick on 2/20/17.
+ * A Location contains coordinates and a name.
  */
 
 public class FacebookLocation {
+
+	/**
+	 * The name of the Location.
+	 */
     private String name;
+
+	/**
+	 * The latitude of the Location.
+	 */
     private double latitude;
+
+	/**
+	 * The longitude of the Location
+	 */
     private double longitude;
 
     FacebookLocation(JSONObject placeObject) {
@@ -25,14 +37,23 @@ public class FacebookLocation {
         }
     }
 
+	/**
+	 * @return name of the location.
+	 */
     public String getName() {
         return name;
     }
 
+	/**
+	 * @return latitude of the location.
+	 */
     public double getLatitude() {
         return latitude;
     }
 
+	/**
+	 * @return longitude of the location.
+	 */
     public double getLongitude() {
         return longitude;
     }
