@@ -1,18 +1,14 @@
 package cs48.ucsb.edu.clubhop;
 
-import android.*;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.camera2.params.Face;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -21,8 +17,6 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
-import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -30,17 +24,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Set;
-
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     LoginButton loginButton;
+    JSONArray content;
     TextView textView;
     CallbackManager callbackManager;
-    UserEventsModel userEventsModel;
-    JSONArray content;
-    String testString;
+
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
@@ -56,75 +46,41 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setReadPermissions("user_events");
         textView = (TextView) findViewById(R.id.textView);
         callbackManager = CallbackManager.Factory.create();
-        final Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
+        final Intent intent = new Intent(this, MapsActivity.class);
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-
+        checkPermission();
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
                 final AccessToken token = AccessToken.getCurrentAccessToken();
+
                 GraphRequest request = GraphRequest.newMeRequest(
                         token,
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-
                                 try {
                                     content = response.getJSONObject().getJSONObject("events").getJSONArray("data");
-                                    while (content == null) {
-                                        textView.setText("null");
-                                    }
-                                    textView.setText("not null");
-                                    userEventsModel = new UserEventsModel( content ); // can't access this outside of the onCompleted
-                                    testString = userEventsModel.getEvent(0).getTitle();
-                                    textView.setText(testString);
+                                    UserEventsModel.getInstance().loadJSONArray(content);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
-
+                                //textView.setText( response.getRawResponse() );
                             }
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "events");
+                parameters.putString("fields", "name, events"); // literally wont give us events
                 request.setParameters(parameters);
-                //request.executeAndWait();
-                request.executeAsync(); // request is not executed immediate which is why userEventsModel gets NullPointerException
-                if ( testString == null ) textView.setText("testString is null");
-                textView.setText(testString);
+                request.executeAsync();
 
-                /*if (content == null) {
-                    textView.setText("reverted to null");
-                }*/
-
+                //ASSUMING USER ID CAN BE STORED AS A STRING
+                //User user = new User("123PLACEHOLDER", "John Doe");
+                //Bundle userBundle = new UserInfoBundler().makeBundle(user);
                 startActivity(intent);
+                //startActivity(intent, userBundle);
             }
 
             @Override
@@ -136,16 +92,35 @@ public class MainActivity extends AppCompatActivity {
             public void onError(FacebookException error) {
                 textView.setText("Login Error");
             }
-
         });
+    }
 
-        /*if (content == null) {
-            textView.setText("reverted to null");
-        }*/
+    private void checkPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
-        //textView.setText( userEventsModel.getEvent(0).getTitle() ); // insta-crash
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
 
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
 
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
     }
 
     @Override
@@ -154,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testButton(View view) {
-        Intent intent = new Intent(this, cs48.ucsb.edu.clubhop.MapsActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 }

@@ -11,9 +11,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class PublicMarkerOptions extends AbstractMarkerOptions {
 
     @Override
-    MarkerOptions generate(LatLng latLng) {
+    MarkerOptions generate(FacebookEvent event) {
         return new MarkerOptions()
-                .position(latLng)
+                .position(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
     }
 }

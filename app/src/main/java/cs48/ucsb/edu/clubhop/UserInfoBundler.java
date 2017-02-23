@@ -10,7 +10,7 @@ public class UserInfoBundler {
 
     public Bundle makeBundle(User user) {
         Bundle bundle = new Bundle();
-        bundle.putString("UserID", user.getID());
+        bundle.putInt("UserID", user.getID());
         bundle.putString("Name", user.getName());
         return bundle;
     }

@@ -11,5 +11,5 @@ import com.google.android.gms.maps.model.Marker;
  * are often created and added to the map at the same time
  */
 public abstract class AbstractMarkerOptions {
-    abstract MarkerOptions generate(LatLng latLng);
+    abstract MarkerOptions generate(FacebookEvent event);
 }

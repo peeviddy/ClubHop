@@ -6,15 +6,15 @@ package cs48.ucsb.edu.clubhop;
 
 public class User {
 
-    private String userID;
+    private int userID;
     private String name;
 
-    public User(String _userID, String _name) {
+    public User(int _userID, String _name) {
         userID = _userID;
         name = _name;
     }
 
-    public String getID() {
+    public int getID() {
         return userID;
     }
 
