@@ -1,8 +1,9 @@
 package cs48.ucsb.edu.clubhop;
 
 /**
- * Created by Joel on 2/22/2017.
+ * A listener that will be notified when the model changes.
  */
+// Maybe refactor this into just a general listener?
 public interface ModelListener {
     public void onChange();
 }
