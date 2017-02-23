@@ -18,8 +18,17 @@ public class FacebookEvent {
     private String endTime;
     private String pictureURL;
 
-    FacebookEvent(JSONObject eventObject) {
+    FacebookEvent() {
+        title = "";
+        description = "";
+        int id = 0;
+        String type = "";
+        String startTime = "";
+        String endTime = "";
+        String pictureURL = "";
+    }
 
+    public void loadJSONObject(JSONObject eventObject) {
         try {
 
             title = eventObject.getString("name");
@@ -34,15 +43,14 @@ public class FacebookEvent {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     public String getTitle() {
-        return title;
+        return checkForNull(title);
     }
 
     public String getDescription() {
-        return description;
+        return checkForNull(description);
     }
 
     public FacebookLocation getLocation() {
@@ -54,18 +62,24 @@ public class FacebookEvent {
     }
 
     public String getType() {
-        return type;
+        return checkForNull(type);
     }
 
     public String getStartTime() {
-        return startTime;
+        return checkForNull(startTime);
     }
 
     public String getEndTime() {
-        return endTime;
+        return checkForNull(endTime);
     }
 
     public String getPictureURL() {
-        return pictureURL;
+        return checkForNull(pictureURL);
+    }
+
+    private String checkForNull(String field) {
+        if (field == null)
+            return "";
+        return field;
     }
 }

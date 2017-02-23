@@ -17,9 +17,12 @@ import java.util.ArrayList;
  */
 
 public class UserEventsModel {
+
+    private User user;
     private boolean isCreated = false;
 
-    private OnChangeListener listener;
+    //private ModelListener listener;
+    private ArrayList<ModelListener> listeners = new ArrayList<>();
 
     //JSONArray events;
     private ArrayList<FacebookEvent> events = new ArrayList<>();
@@ -32,25 +35,33 @@ public class UserEventsModel {
         return instance;
     }
 
-    public void loadJSON(JSONArray eventArray) {
+    public void setUser(JSONObject userJSON) {
+        try {
+            user = new User(userJSON.getInt("id"), userJSON.getString("name"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadJSONArray(JSONArray eventArray) {
         for (int i = 0; i < eventArray.length(); ++i) {
             try {
-                FacebookEvent e = new FacebookEvent(eventArray.getJSONObject(i));
-                events.add(e);
+                FacebookEvent e = new FacebookEvent();
+                e.loadJSONObject(eventArray.getJSONObject(i));
+                if (e.getLocation() != null)
+                    events.add(e);
             } catch (JSONException e1) {
                 e1.printStackTrace();
+                return;
             }
         }
-        listener.onChange();
+        notifyListeners();
     }
 
     private UserEventsModel() {
 
     }
 
-    public interface OnChangeListener {
-        void onChange();
-    }
 
     public FacebookEvent getEvent(int index) {
         return events.get(index);
@@ -62,5 +73,13 @@ public class UserEventsModel {
 
     public boolean isCreated() { return isCreated; }
 
-    public void setOnChangeListener(OnChangeListener listener) { this.listener = listener; }
+    public void addListener(ModelListener listener) { this.listeners.add(listener); }
+
+    private void notifyListeners() {
+        for (int i = 0; i < listeners.size(); ++i) {
+            listeners.get(i).onChange();
+        }
+    }
+
+
 }

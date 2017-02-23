@@ -49,7 +49,7 @@ public class MapsActivity extends FragmentActivity implements
 
     protected Location mLastLocation;
     protected Marker curLocMarker;
-    private Boolean locRetreived = false;
+    private boolean locRetreived = false;
 
     // Navigation
     private DrawerHandler drawerHandler;
@@ -101,15 +101,12 @@ public class MapsActivity extends FragmentActivity implements
         setupDrawer();
 
         // Setting up the listener
-        UserEventsModel.getInstance().setOnChangeListener(new UserEventsModel.OnChangeListener() {
+        UserEventsModel.getInstance().addListener(new ModelListener() {
             @Override
             public void onChange() {
                 receivedEvents = true;
                 if (mMap != null) {
-                    UserEventsModel model = UserEventsModel.getInstance();
-                    for (int i = 0; i < model.getSize(); ++i) {
-                        mMap.addMarker(new MarkerOptionsFactory().getOptions(model.getEvent(i)));
-                    }
+                    setUpMap();
                 }
             }
         });
@@ -117,6 +114,50 @@ public class MapsActivity extends FragmentActivity implements
         // Toggle switch in the action bar
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    private void setUpMap() {
+        UserEventsModel model = UserEventsModel.getInstance();
+        for (int i = 0; i < model.getSize(); ++i) {
+            new MarkerHandler().create(mMap, model.getEvent(i));
+        }
+    }
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mGoogleApiClient.connect();
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMarkerClickListener(this);
+
+        //Example markers
+        /*
+        Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()
+                .generate(new LatLng(34.412723, -119.861915)));
+
+        Marker publicEx = mMap.addMarker(new PublicMarkerOptions()
+                .generate(new LatLng(34.411271, -119.856207)));
+
+        Marker commEx = mMap.addMarker(new CommunityMarkerOptions()
+                .generate(new LatLng(34.413122, -119.857826)));
+
+        Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
+                .generate(new LatLng(34.413686, -119.859485)));
+        */
+
+        if (receivedEvents) {
+            setUpMap();
+        }
     }
 
     private void initDrawer() {
@@ -177,47 +218,6 @@ public class MapsActivity extends FragmentActivity implements
         super.onStop();
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mGoogleApiClient.connect();
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setOnInfoWindowClickListener(this);
-        mMap.setOnMarkerClickListener(this);
-
-        //Example markers
-        //Controller.setupMap(mMap);
-        /*
-        Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()
-                .generate(new LatLng(34.412723, -119.861915)));
-
-        Marker publicEx = mMap.addMarker(new PublicMarkerOptions()
-                .generate(new LatLng(34.411271, -119.856207)));
-
-        Marker commEx = mMap.addMarker(new CommunityMarkerOptions()
-                .generate(new LatLng(34.413122, -119.857826)));
-
-        Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
-                .generate(new LatLng(34.413686, -119.859485)));
-        */
-
-        if(receivedEvents) {
-            UserEventsModel model = UserEventsModel.getInstance();
-            for (int i = 0; i < model.getSize(); ++i) {
-                mMap.addMarker(new MarkerOptionsFactory().getOptions(model.getEvent(i)));
-            }
-        }
-    }
-
 
     /**
      * Runs when a GoogleApiClient object successfully connects.
@@ -237,22 +237,6 @@ public class MapsActivity extends FragmentActivity implements
             locRetreived = true;
             handleNewLocation(mLastLocation);
         }
-    }
-
-    private void handleNewLocation(Location location) {
-        Log.d(TAG, location.toString());
-
-        double currentLatitude = location.getLatitude();
-        double currentLongitude = location.getLongitude();
-        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-        curLocMarker = mMap.addMarker(new MarkerOptions()
-                .position(latLng)
-        );
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLng)
-                .zoom(17)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
     }
 
     @Override
@@ -284,6 +268,20 @@ public class MapsActivity extends FragmentActivity implements
         mGoogleApiClient.disconnect();
         locRetreived = true;
         handleNewLocation(location);
+    }
+
+    private void handleNewLocation(Location location) {
+        Log.d(TAG, location.toString());
+
+        double currentLatitude = location.getLatitude();
+        double currentLongitude = location.getLongitude();
+        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(10)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
     }
 
     @Override
