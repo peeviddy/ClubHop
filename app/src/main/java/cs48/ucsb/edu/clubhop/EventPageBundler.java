@@ -10,18 +10,19 @@ import com.google.android.gms.maps.model.Marker;
 
 public class EventPageBundler {
 
-    public Bundle makeEventPageBundle(Marker marker) {
+    public Bundle makeBundle(Marker marker) {
+        FacebookEvent event = (FacebookEvent) marker.getTag();
         Bundle bundle = new Bundle(5);
-        String title = "Title";
-        bundle.putString("Title", title);
+        String title = "An Event Title";
+        bundle.putString("Title", event.getTitle());
         String eventType = "Private";
-        bundle.putString("EventType", eventType);
+        bundle.putString("EventType", event.getType());
         String time = "1:00 - 2:00";
-        bundle.putString("Time", time);
+        bundle.putString("Time", event.getStartTime() + " - " + event.getEndTime());
         String location = "Somewhere location in a place above a tree";
-        bundle.putString("Location", location);
+        bundle.putString("Location", event.getLocation().getName());
         String desc = "Super long string Super long string Super long string Super long string Super long string Super long string Super long string ";
-        bundle.putString("Description", desc);
+        bundle.putString("Description", event.getDescription());
         return bundle;
     }
 }
