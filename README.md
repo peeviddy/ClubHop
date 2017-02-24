@@ -30,7 +30,7 @@ Once you start the game you the board will appear and your character will be at 
 
 There are 3 treasures (or more, you can adjust them in the GameGUI.java) randomly placed on the map. This is the result of finding one. 
 
-![](http://i.imgur.com/9TiBmmL.png)
+![](https://goo.gl/photos/sFi9im2z1JoMTSGt6)
 
 There are some stones on the map, where you are unable to pass through.
 
