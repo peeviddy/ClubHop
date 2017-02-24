@@ -1,10 +1,9 @@
 package cs48.ucsb.edu.clubhop;
 
-import android.os.Bundle;
+import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Marker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +34,8 @@ public class UserEventsModel {
      * The list of events that pertain to the user.
      */
     private ArrayList<FacebookEvent> events;
+
+    private ArrayList<Marker> eventMarkers;
 
     /**
      * The singleton instance of the model.
@@ -80,7 +81,7 @@ public class UserEventsModel {
                 return;
             }
         }
-        notifyListeners();
+        notifyEventListeners();
     }
 
     /**
@@ -89,6 +90,20 @@ public class UserEventsModel {
     private UserEventsModel() {
         listeners = new ArrayList<>();
         events = new ArrayList<>();
+        eventMarkers = new ArrayList<>();
+    }
+
+    public void generateMarkers(GoogleMap map) {
+        if (events.size() == 0) {
+            System.out.println("No events");
+            //Toast.makeText(, "", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        for (int i = 0; i < events.size(); ++i) {
+            eventMarkers.add(map.addMarker(new MarkerOptionsFactory().getOptions(events.get(i))));
+            eventMarkers.get(i).setTag(events.get(i));
+        }
+        notifyMarkerListeners();
     }
 
     /**
@@ -117,11 +132,16 @@ public class UserEventsModel {
     /**
      * Tells all of the subscribed listeners that the model has changed.
      */
-    private void notifyListeners() {
+    private void notifyEventListeners() {
         for (int i = 0; i < listeners.size(); ++i) {
-            listeners.get(i).onChange();
+            listeners.get(i).onEventsCreated();
         }
     }
 
+    private void notifyMarkerListeners() {
+        for (int i = 0; i < listeners.size(); ++i) {
+            listeners.get(i).onMarkersCreated();
+        }
+    }
 
 }

@@ -5,5 +5,6 @@ package cs48.ucsb.edu.clubhop;
  */
 // Maybe refactor this into just a general listener?
 public interface ModelListener {
-    public void onChange();
+    public void onEventsCreated();
+    public void onMarkersCreated();
 }

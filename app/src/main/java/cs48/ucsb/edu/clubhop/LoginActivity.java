@@ -48,8 +48,8 @@ public class LoginActivity extends AppCompatActivity {
 
     CallbackManager callbackManager;
 
-	String readPermissions = "user_events";
-	String requestedFields = "name,events";
+	final String readPermissions = "user_events";
+	final String requestedFields = "name,events";
 
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
@@ -75,9 +75,12 @@ public class LoginActivity extends AppCompatActivity {
 
         checkPermission();
 
-		// setupLoginButton(LoginButton loginButton, CallbackManager callbackManager, String readPermissions);
+		//setupLoginButton(loginButton, callbackManager, readPermissions, requestedFields);
+
+		//startActivity(intent);
 		//
 		// Above line SHOULD replace everything below? and the permissions
+
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -160,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 	public void setupLoginButton(LoginButton loginButton, CallbackManager callbackManager,
-			String readPermissions, String requestedFields) {
+			String readPermissions, final String requestedFields) {
 
 				loginButton.setReadPermissions(readPermissions);
 				loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -235,11 +238,9 @@ public class LoginActivity extends AppCompatActivity {
 	}
 
 	public void handleJSONArray(JSONArray events) {
-		try {
+
 			UserEventsModel.getInstance().loadJSONArray(events);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+
 	}
 
 }
