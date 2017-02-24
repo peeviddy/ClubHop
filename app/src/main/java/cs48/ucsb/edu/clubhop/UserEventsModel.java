@@ -1,11 +1,7 @@
 package cs48.ucsb.edu.clubhop;
 
-<<<<<<< HEAD
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-
-=======
->>>>>>> master
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
