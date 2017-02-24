@@ -40,3 +40,5 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 :ant: Can't return to map view without logging out and logging back in
 
 :ant: Can only see events that you marked as "going" or "maybe"
+
+:ant: Logging in as a different user has caused occasional crashes
