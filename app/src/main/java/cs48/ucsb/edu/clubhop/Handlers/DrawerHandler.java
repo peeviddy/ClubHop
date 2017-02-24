@@ -1,4 +1,4 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.Handlers;
 
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
@@ -8,6 +8,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import cs48.ucsb.edu.clubhop.MapsActivity;
+import cs48.ucsb.edu.clubhop.R;
 
 
 public class DrawerHandler {

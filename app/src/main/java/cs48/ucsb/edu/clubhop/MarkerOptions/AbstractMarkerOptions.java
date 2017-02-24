@@ -1,8 +1,10 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.MarkerOptions;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Marker;
+
+import cs48.ucsb.edu.clubhop.FacebookEvent;
 
 /**
  * This is an abstract class for making different MarkerOptions
