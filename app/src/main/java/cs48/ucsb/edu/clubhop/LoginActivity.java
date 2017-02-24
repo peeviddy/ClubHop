@@ -24,17 +24,39 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Activity that handles the user's login. First activity to occur when the app launches.
+ */
 public class LoginActivity extends AppCompatActivity {
 
+	/**
+	 * Button that the user interacts with in order to log into Facebook.
+	 */
     LoginButton loginButton;
+
+	/**
+	 * The JSONArray of Events that come in from the graph request.	
+	 */
+	// Maybe change into just a local variable in the onSuccess() method?
     JSONArray content;
+
+	/**
+	 * The TextView that welcomes the user. Also tells the user if there was a problem during login.
+	 */
     TextView textView;
+
+
     CallbackManager callbackManager;
 
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
-
+	/**
+	 * Method that handles the creation of the entire LoginActivity. Within this method, we
+	 * create the login button and handle the login, handle permissions, and make the graph request.
+	 */
+	// There seems to be a lot of responsibilities in this one function, might want to separate this
+	// into many functions?
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +184,9 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+	/**
+	 * The onClick() method that allows the user to try out the app without logging in.
+	 */
     public void testButton(View view) {
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
