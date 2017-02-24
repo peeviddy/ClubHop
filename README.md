@@ -27,15 +27,15 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 
 **map will only populate with markers upon successful login**
 
-![](http://i.imgur.com/7MUHKkd.png)
+![](http://i.imgur.com/7MUHKkd.png =1280x720)
 
 Welcome to ClubHop! The app should now center in on your location and show you nearby events.
 
-![](http://i.imgur.com/BIoyZYm.png)
+![](http://i.imgur.com/BIoyZYm.png =1280x720)
 
 Feel free to scroll around and tap on events you would like to attend.
 
-![](http://i.imgur.com/IhCpNTN.png)
+![](http://i.imgur.com/IhCpNTN.png =1280x720)
 
 
 # KNOWN BUGS
