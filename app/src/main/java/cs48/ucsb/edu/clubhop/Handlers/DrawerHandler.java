@@ -1,4 +1,4 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.Handlers;
 
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;

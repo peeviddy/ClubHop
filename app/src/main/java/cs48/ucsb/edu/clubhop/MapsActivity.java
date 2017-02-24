@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.MenuItem;
 
 // Navigation
-import android.view.View;
-import android.widget.AdapterView;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -30,6 +28,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import cs48.ucsb.edu.clubhop.Bundlers.EventPageBundler;
+import cs48.ucsb.edu.clubhop.Handlers.FilterHandler;
+import cs48.ucsb.edu.clubhop.Handlers.MarkerHandler;
+
 import static cs48.ucsb.edu.clubhop.R.id.map;
 
 public class MapsActivity extends FragmentActivity implements
@@ -46,17 +48,16 @@ public class MapsActivity extends FragmentActivity implements
     public static final String TAG = MapsActivity.class.getSimpleName();
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9001;
 
-
     protected Location mLastLocation;
     private boolean locRetreived = false;
 
     private FilterHandler filterHandler;
+    private MarkerHandler markerHandler;
 
     // Navigation
     DrawerLayout drawerLayout;
     FragmentTransaction fragmentTransaction;
     NavigationView navigationView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,8 @@ public class MapsActivity extends FragmentActivity implements
         Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
         filterHandler = new FilterHandler();
         filterHandler.setUp(filterMenu,getBaseContext());
+
+        markerHandler = new MarkerHandler();
 
         // Setting up the listener
         UserEventsModel.getInstance().addListener(new ModelListener() {
@@ -134,7 +137,7 @@ public class MapsActivity extends FragmentActivity implements
     private void setUpMap() {
         UserEventsModel model = UserEventsModel.getInstance();
         for (int i = 0; i < model.getSize(); ++i) {
-            new MarkerHandler().create(mMap, model.getEvent(i));
+            markerHandler.create(mMap, model.getEvent(i));
         }
     }
 
@@ -202,7 +205,6 @@ public class MapsActivity extends FragmentActivity implements
         }
         super.onStop();
     }
-
 
     /**
      * Runs when a GoogleApiClient object successfully connects.

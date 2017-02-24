@@ -1,7 +1,9 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.MarkerOptions;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import cs48.ucsb.edu.clubhop.FacebookEvent;
 
 /**
  * Created by Joel on 2/17/2017.

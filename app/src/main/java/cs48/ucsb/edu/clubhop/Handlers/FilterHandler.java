@@ -1,4 +1,4 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.Handlers;
 
 import android.content.Context;
 import android.view.View;
@@ -15,7 +15,6 @@ public class FilterHandler {
                 //Toast.makeText(context, parentView.getItemAtPosition(position) + " is selected", Toast.LENGTH_LONG).show();
                 if (parentView.getItemAtPosition(position).equals("All"))
                     Toast.makeText(context, "Showing all events", Toast.LENGTH_LONG).show();
-
                 else if (parentView.getItemAtPosition(position).equals("Today") )
                     Toast.makeText(context, "Showing events happening today",Toast.LENGTH_LONG).show();
                 else

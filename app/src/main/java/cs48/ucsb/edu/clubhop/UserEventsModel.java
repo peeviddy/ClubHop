@@ -1,7 +1,5 @@
 package cs48.ucsb.edu.clubhop;
 
-import android.widget.Toast;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
@@ -10,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import cs48.ucsb.edu.clubhop.MarkerOptions.MarkerOptionsFactory;
 
 /**
  *  A class that holds all of the FacebookEvents pertaining to a certain User.
@@ -70,6 +70,7 @@ public class UserEventsModel {
      * @param eventArray
      */
     public void loadJSONArray(JSONArray eventArray) {
+        events = new ArrayList<>();
         for (int i = 0; i < eventArray.length(); ++i) {
             try {
                 FacebookEvent e = new FacebookEvent();
@@ -99,6 +100,7 @@ public class UserEventsModel {
             //Toast.makeText(, "", Toast.LENGTH_SHORT).show();
             return;
         }
+        eventMarkers = new ArrayList<>();
         for (int i = 0; i < events.size(); ++i) {
             eventMarkers.add(map.addMarker(new MarkerOptionsFactory().getOptions(events.get(i))));
             eventMarkers.get(i).setTag(events.get(i));
