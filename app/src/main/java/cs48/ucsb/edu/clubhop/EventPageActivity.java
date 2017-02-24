@@ -3,6 +3,7 @@ package cs48.ucsb.edu.clubhop;
 import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 public class EventPageActivity extends AppCompatActivity {
@@ -22,5 +23,6 @@ public class EventPageActivity extends AppCompatActivity {
         locationView.setText(getIntent().getExtras().getString("Location"));
         TextView descView = (TextView) findViewById(R.id.desc_view);
         descView.setText(getIntent().getExtras().getString("Description"));
+        descView.setMovementMethod( new ScrollingMovementMethod() );
     }
 }

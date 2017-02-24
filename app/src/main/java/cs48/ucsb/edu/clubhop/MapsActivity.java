@@ -2,18 +2,15 @@ package cs48.ucsb.edu.clubhop;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.res.Resources;
 import android.location.Location;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
 // Navigation
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ArrayAdapter;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -29,8 +26,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+
+import cs48.ucsb.edu.clubhop.Bundlers.EventPageBundler;
+import cs48.ucsb.edu.clubhop.Handlers.FilterHandler;
+import cs48.ucsb.edu.clubhop.Handlers.MarkerHandler;
+
+import static cs48.ucsb.edu.clubhop.R.id.map;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
@@ -40,36 +43,33 @@ public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnMarkerClickListener {
 
+    private boolean receivedEvents = false;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private MapsActivity mapsActivityInstance = this;
 
     public static final String TAG = MapsActivity.class.getSimpleName();
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9001;
 
-
     protected Location mLastLocation;
-    protected Marker curLocMarker;
-    private Boolean locRetreived = false;
+    private boolean locRetreived = false;
+
+    private FilterHandler filterHandler;
+    private MarkerHandler markerHandler;
 
     // Navigation
-    private DrawerHandler drawerHandler;
-    private ListView mDrawerList;
-    private String[] osArray = {"Android", "iOS", "Windows", "OS X", "Linux"};
-    private ArrayAdapter<String> mAdapter;
-
-    // Navigation Toggle switch
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
-    private String mActivityTitle;
-
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment)
-                getSupportFragmentManager().findFragmentById(R.id.map);
+                getSupportFragmentManager().findFragmentById(map);
         mapFragment.getMapAsync(this);
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -79,59 +79,142 @@ public class MapsActivity extends FragmentActivity implements
                     .build();
         }
 
-        //Spinner(filter menu)
+        // Spinner(filter menu)
         Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
-        filterMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        filterHandler = new FilterHandler();
+        filterHandler.setUp(filterMenu,getBaseContext());
+
+        markerHandler = new MarkerHandler();
+
+        // Setting up the UserEventsModel listener
+        UserEventsModel.getInstance().addListener(new UserEventsModelListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                Toast.makeText(getBaseContext(), parentView.getItemAtPosition(position) + " is selected", Toast.LENGTH_LONG).show();
+            public void onEventsCreated() {
+                receivedEvents = true;
+                if (mMap != null) {
+                    UserEventsModel.getInstance().generateMarkers(mMap);
+                    //setUpMap();
+                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
+            public void onMarkersCreated() {
+                Toast.makeText(MapsActivity.this, "Markers generated successfully.", Toast.LENGTH_SHORT).show();
             }
+        });
 
+        // Setting up the SettingsModel listener
+        SettingsModel.getInstance().addListener(new SettingsModelListener() {
+            @Override
+            public void onStyleChange() {
+                String styleType = SettingsModel.getInstance().getStyleType();
+                switch (styleType) {
+                    case "night":
+                        try {
+                            Boolean success = mMap.setMapStyle(
+                                    MapStyleOptions.loadRawResourceStyle(
+                                            mapsActivityInstance, R.raw.night_style));
+
+                            if (!success) {
+                                Log.e("MapsActivityRaw", "Style parsing failed.");
+                            }
+                        } catch (Resources.NotFoundException e) {
+                            Log.e("MapsActivityRaw", "Can't find style.", e);
+                        }
+
+                    default:
+                        try {
+                            Boolean success = mMap.setMapStyle(
+                                    MapStyleOptions.loadRawResourceStyle(
+                                            mapsActivityInstance, R.raw.standard_style));
+
+                            if (!success) {
+                                Log.e("MapsActivityRaw", "Style parsing failed.");
+                            }
+                        } catch (Resources.NotFoundException e) {
+                            Log.e("MapsActivityRaw", "Can't find style.", e);
+                        }
+                }
+                // refreshStyle();
+            }
         });
 
         // Navigation
-        initDrawer();
-        addDrawerItems();
-        setupDrawer();
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-        // Toggle switch in the action bar
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
+        // Create click listener for navigationView
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                switch(item.getItemId()) { // get from drawer_menu.xml
+                    case R.id.home_id:
+                        handleNewLocation(mLastLocation);
+                        drawerLayout.closeDrawers();
+                        break;
+
+                    case R.id.settings_id:
+                        Intent settingsIntent = new Intent(MapsActivity.this, SettingsActivity.class);
+                        MapsActivity.this.startActivity(settingsIntent);
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+
+                    case R.id.logout_id:
+                        Intent logoutIntent = new Intent(MapsActivity.this, LoginActivity.class);
+                        MapsActivity.this.startActivity(logoutIntent);
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                }
+
+                return false;
+            }
+        });
     }
 
-    private void initDrawer() {
-        mDrawerList = (ListView) findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mActivityTitle = getTitle().toString();
-
-        mAdapter = new ArrayAdapter<String>(MapsActivity.this, android.R.layout.simple_list_item_1, osArray);
-
-        drawerHandler = new DrawerHandler();
-    }
-
-    // Helper method to add items and configure the nav list
-    private void addDrawerItems() {
-        drawerHandler.addDrawerItems(mDrawerList, mAdapter, MapsActivity.this);
-    }
-
-    // Helper method for navigation
-    private void setupDrawer() {
-        drawerHandler.setUp(mDrawerToggle, mDrawerLayout, this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
+    private void setUpMap() {
+        UserEventsModel model = UserEventsModel.getInstance();
+        for (int i = 0; i < model.getSize(); ++i) {
+            markerHandler.create(mMap, model.getEvent(i));
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mGoogleApiClient.connect();
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMarkerClickListener(this);
+
+        //Example markers
+        /*
+        Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()
+                .generate(new LatLng(34.412723, -119.861915)));
+
+        Marker publicEx = mMap.addMarker(new PublicMarkerOptions()
+                .generate(new LatLng(34.411271, -119.856207)));
+
+        Marker commEx = mMap.addMarker(new CommunityMarkerOptions()
+                .generate(new LatLng(34.413122, -119.857826)));
+
+        Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
+                .generate(new LatLng(34.413686, -119.859485)));
+        */
+        // refreshStyle();
+        if (receivedEvents) {
+            setUpMap();
+        }
     }
 
     @Override
@@ -163,41 +246,6 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mGoogleApiClient.connect();
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setOnInfoWindowClickListener(this);
-        mMap.setOnMarkerClickListener(this);
-
-        //Example markers
-        Controller.setupMap(mMap);
-        /*
-        Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()
-                .generate(new LatLng(34.412723, -119.861915)));
-
-        Marker publicEx = mMap.addMarker(new PublicMarkerOptions()
-                .generate(new LatLng(34.411271, -119.856207)));
-
-        Marker commEx = mMap.addMarker(new CommunityMarkerOptions()
-                .generate(new LatLng(34.413122, -119.857826)));
-
-        Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
-                .generate(new LatLng(34.413686, -119.859485)));
-        */
-    }
-
-
-    /**
      * Runs when a GoogleApiClient object successfully connects.
      */
     @Override
@@ -215,22 +263,6 @@ public class MapsActivity extends FragmentActivity implements
             locRetreived = true;
             handleNewLocation(mLastLocation);
         }
-    }
-
-    private void handleNewLocation(Location location) {
-        Log.d(TAG, location.toString());
-
-        double currentLatitude = location.getLatitude();
-        double currentLongitude = location.getLongitude();
-        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-        curLocMarker = mMap.addMarker(new MarkerOptions()
-                .position(latLng)
-        );
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLng)
-                .zoom(17)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
     }
 
     @Override
@@ -255,18 +287,30 @@ public class MapsActivity extends FragmentActivity implements
             Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
         }
     }
-
     @Override
     public void onLocationChanged(Location location) {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        mGoogleApiClient.disconnect();
+        //mGoogleApiClient.disconnect();
         locRetreived = true;
         handleNewLocation(location);
     }
 
+    private void handleNewLocation(Location location) {
+        Log.d(TAG, location.toString());
+
+        double currentLatitude = location.getLatitude();
+        double currentLongitude = location.getLongitude();
+        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(10)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
+    }
+
     @Override
     public void onInfoWindowClick(Marker marker) {
-        // TODO: 2/17/2017 Reroute following method call through controller
         Bundle bundle = new EventPageBundler().makeBundle(marker);
 
         Intent eventPageIntent = new Intent(this, EventPageActivity.class);
@@ -276,12 +320,42 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        // TODO: 2/17/2017 Reroute following method call through controller
         new InfoWindowConfigurator().config(marker);
 
         // We return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the
         // marker is centered and for the marker's info window to open, if it has one).
         return false;
+    }
+
+    public void refreshStyle() {
+        String styleType = SettingsModel.getInstance().getStyleType();
+        switch (styleType) {
+            case "night":
+                try {
+                    Boolean success = mMap.setMapStyle(
+                            MapStyleOptions.loadRawResourceStyle(
+                                    mapsActivityInstance, R.raw.night_style));
+
+                    if (!success) {
+                        Log.e("MapsActivityRaw", "Style parsing failed.");
+                    }
+                } catch (Resources.NotFoundException e) {
+                    Log.e("MapsActivityRaw", "Can't find style.", e);
+                }
+
+            default:
+                try {
+                    Boolean success = mMap.setMapStyle(
+                            MapStyleOptions.loadRawResourceStyle(
+                                    mapsActivityInstance, R.raw.standard_style));
+
+                    if (!success) {
+                        Log.e("MapsActivityRaw", "Style parsing failed.");
+                    }
+                } catch (Resources.NotFoundException e) {
+                    Log.e("MapsActivityRaw", "Can't find style.", e);
+                }
+        }
     }
 }

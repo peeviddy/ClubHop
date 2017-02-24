@@ -38,6 +38,7 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".EventPageActivity" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
