@@ -11,32 +11,29 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 ==================
 # Running the App
 ==================
-
 1. Open the ClubHop project folder in Android Studio
 2. Plug in your Android device via USB
 3. Click the green play button in the toolbar to start the app. You'll have a selection of devices to choose from. 
 
-![](http://i.imgur.com/tkizRbi.png)
+<img src="http://i.imgur.com/tkizRbi.png" width="800px" />
 
 - Choose the device you want to use (whether emulator or physical) and wait for the app to build and run itself
 
-![](http://i.imgur.com/q9Busuc.png)
+<img src="http://i.imgur.com/q9Busuc.png" width="800px" />
 
 - The app should launch after a few minutes. On the location request popup, tap "allow"
 - The first screen is a Facebook login button. To get the full ClubHop experience, log in with your Facebook account
+*map will only populate with markers upon successful login*
 
-**map will only populate with markers upon successful login**
-
-![](http://i.imgur.com/7MUHKkd.png =1280x720)
+<img src="http://i.imgur.com/7MUHKkd.png" width="450px" />
 
 Welcome to ClubHop! The app should now center in on your location and show you nearby events.
 
-![](http://i.imgur.com/BIoyZYm.png =1280x720)
+<img src="http://i.imgur.com/BIoyZYm.png" width="450px" />
 
 Feel free to scroll around and tap on events you would like to attend.
 
-![](http://i.imgur.com/IhCpNTN.png =1280x720)
-
+<img src="http://i.imgur.com/IhCpNTN.png" width="450px" />
 
 # KNOWN BUGS
 ===============
