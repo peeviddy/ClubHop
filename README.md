@@ -41,5 +41,7 @@ Feel free to scroll around and tap on events you would like to attend.
 # KNOWN BUGS
 ===============
 :beetle: Logging out and logging back in, then tapping an event crashes the app
-:beetle:
-:beetle:
+
+:beetle: Can't return to map view without logging out and logging back in
+
+:beetle: Can only see events that you marked as "going" or "maybe"
