@@ -1,10 +1,14 @@
 package cs48.ucsb.edu.clubhop;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Marker;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import cs48.ucsb.edu.clubhop.MarkerOptions.MarkerOptionsFactory;
 
 /**
  *  A class that holds all of the FacebookEvents pertaining to a certain User.
@@ -29,6 +33,8 @@ public class UserEventsModel {
      * The list of events that pertain to the user.
      */
     private ArrayList<FacebookEvent> events;
+
+    private ArrayList<Marker> eventMarkers;
 
     /**
      * The singleton instance of the model.
@@ -63,6 +69,7 @@ public class UserEventsModel {
      * @param eventArray
      */
     public void loadJSONArray(JSONArray eventArray) {
+        events = new ArrayList<>();
         for (int i = 0; i < eventArray.length(); ++i) {
             try {
                 FacebookEvent e = new FacebookEvent();
@@ -74,7 +81,7 @@ public class UserEventsModel {
                 return;
             }
         }
-        notifyListeners();
+        notifyEventListeners();
     }
 
     /**
@@ -83,6 +90,21 @@ public class UserEventsModel {
     private UserEventsModel() {
         listeners = new ArrayList<>();
         events = new ArrayList<>();
+        eventMarkers = new ArrayList<>();
+    }
+
+    public void generateMarkers(GoogleMap map) {
+        if (events.size() == 0) {
+            System.out.println("No events");
+            //Toast.makeText(, "", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        eventMarkers = new ArrayList<>();
+        for (int i = 0; i < events.size(); ++i) {
+            eventMarkers.add(map.addMarker(new MarkerOptionsFactory().getOptions(events.get(i))));
+            eventMarkers.get(i).setTag(events.get(i));
+        }
+        notifyMarkerListeners();
     }
 
     /**
@@ -93,6 +115,8 @@ public class UserEventsModel {
     public FacebookEvent getEvent(int index) {
         return events.get(index);
     }
+
+    public Marker getEventMarker(int index) { return eventMarkers.get(index); }
 
     /**
      * @return The size of the list of FacebookEvents.
@@ -111,11 +135,16 @@ public class UserEventsModel {
     /**
      * Tells all of the subscribed listeners that the model has changed.
      */
-    private void notifyListeners() {
+    private void notifyEventListeners() {
         for (int i = 0; i < listeners.size(); ++i) {
-            listeners.get(i).onChange();
+            listeners.get(i).onEventsCreated();
         }
     }
 
+    private void notifyMarkerListeners() {
+        for (int i = 0; i < listeners.size(); ++i) {
+            listeners.get(i).onMarkersCreated();
+        }
+    }
 
 }

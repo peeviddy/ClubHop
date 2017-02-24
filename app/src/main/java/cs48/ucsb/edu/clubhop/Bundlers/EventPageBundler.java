@@ -1,8 +1,10 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.Bundlers;
 
 import android.os.Bundle;
 
 import com.google.android.gms.maps.model.Marker;
+
+import cs48.ucsb.edu.clubhop.FacebookEvent;
 
 /**
  * Created by Joel on 2/14/2017.
