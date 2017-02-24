@@ -2,11 +2,11 @@ package cs48.ucsb.edu.clubhop;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.res.Resources;
 import android.location.Location;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 
 import static cs48.ucsb.edu.clubhop.R.id.map;
@@ -39,9 +40,11 @@ public class MapsActivity extends FragmentActivity implements
         LocationListener,
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnMarkerClickListener {
+
     private boolean receivedEvents = false;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private MapsActivity mapsActivityInstance = this;
 
     public static final String TAG = MapsActivity.class.getSimpleName();
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9001;
@@ -52,15 +55,14 @@ public class MapsActivity extends FragmentActivity implements
 
     // Navigation
     DrawerLayout drawerLayout;
-    FragmentTransaction fragmentTransaction;
     NavigationView navigationView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(map);
@@ -88,14 +90,50 @@ public class MapsActivity extends FragmentActivity implements
 
         });
 
-        // Setting up the listener
-        UserEventsModel.getInstance().addListener(new ModelListener() {
+        // Setting up the UserEventsModel listener
+        UserEventsModel.getInstance().addListener(new UserEventsModelListener() {
             @Override
             public void onChange() {
                 receivedEvents = true;
                 if (mMap != null) {
                     setUpMap();
                 }
+            }
+        });
+
+        // Setting up the SettingsModel listener
+        SettingsModel.getInstance().addListener(new SettingsModelListener() {
+            @Override
+            public void onStyleChange() {
+                String styleType = SettingsModel.getInstance().getStyleType();
+                switch (styleType) {
+                    case "night":
+                        try {
+                            Boolean success = mMap.setMapStyle(
+                                    MapStyleOptions.loadRawResourceStyle(
+                                            mapsActivityInstance, R.raw.night_style));
+
+                            if (!success) {
+                                Log.e("MapsActivityRaw", "Style parsing failed.");
+                            }
+                        } catch (Resources.NotFoundException e) {
+                            Log.e("MapsActivityRaw", "Can't find style.", e);
+                        }
+
+                    default:
+                        try {
+                            Boolean success = mMap.setMapStyle(
+                                    MapStyleOptions.loadRawResourceStyle(
+                                            mapsActivityInstance, R.raw.standard_style));
+
+                            if (!success) {
+                                Log.e("MapsActivityRaw", "Style parsing failed.");
+                            }
+                        } catch (Resources.NotFoundException e) {
+                            Log.e("MapsActivityRaw", "Can't find style.", e);
+                        }
+                }
+                // refreshStyle();
             }
         });
 
@@ -111,18 +149,18 @@ public class MapsActivity extends FragmentActivity implements
                     case R.id.home_id:
                         handleNewLocation(mLastLocation);
                         drawerLayout.closeDrawers();
+                        break;
 
                     case R.id.settings_id:
-                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.main_container, new SettingsFragment());
-                        fragmentTransaction.commit();
+                        Intent settingsIntent = new Intent(MapsActivity.this, SettingsActivity.class);
+                        MapsActivity.this.startActivity(settingsIntent);
                         item.setChecked(true);
                         drawerLayout.closeDrawers();
                         break;
 
                     case R.id.logout_id:
-                        Intent myIntent = new Intent(MapsActivity.this, LoginActivity.class);
-                        MapsActivity.this.startActivity(myIntent);
+                        Intent logoutIntent = new Intent(MapsActivity.this, LoginActivity.class);
+                        MapsActivity.this.startActivity(logoutIntent);
                         item.setChecked(true);
                         drawerLayout.closeDrawers();
                         break;
@@ -171,7 +209,7 @@ public class MapsActivity extends FragmentActivity implements
         Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
                 .generate(new LatLng(34.413686, -119.859485)));
         */
-
+        // refreshStyle();
         if (receivedEvents) {
             setUpMap();
         }
@@ -290,5 +328,36 @@ public class MapsActivity extends FragmentActivity implements
         // for the default behavior to occur (which is for the camera to move such that the
         // marker is centered and for the marker's info window to open, if it has one).
         return false;
+    }
+
+    public void refreshStyle() {
+        String styleType = SettingsModel.getInstance().getStyleType();
+        switch (styleType) {
+            case "night":
+                try {
+                    Boolean success = mMap.setMapStyle(
+                            MapStyleOptions.loadRawResourceStyle(
+                                    mapsActivityInstance, R.raw.night_style));
+
+                    if (!success) {
+                        Log.e("MapsActivityRaw", "Style parsing failed.");
+                    }
+                } catch (Resources.NotFoundException e) {
+                    Log.e("MapsActivityRaw", "Can't find style.", e);
+                }
+
+            default:
+                try {
+                    Boolean success = mMap.setMapStyle(
+                            MapStyleOptions.loadRawResourceStyle(
+                                    mapsActivityInstance, R.raw.standard_style));
+
+                    if (!success) {
+                        Log.e("MapsActivityRaw", "Style parsing failed.");
+                    }
+                } catch (Resources.NotFoundException e) {
+                    Log.e("MapsActivityRaw", "Can't find style.", e);
+                }
+        }
     }
 }

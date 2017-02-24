@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_settings"
     android:layout_width="match_parent"
@@ -10,12 +11,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="cs48.ucsb.edu.clubhop.SettingsActivity">
 
-        <TextView
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="35dp"
-            android:text="Settings Fragment!!" />
+            android:layout_height="match_parent" >
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@mipmap/ic_standard_map"
+                    android:id="@+id/standardButton" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@mipmap/ic_night_map"
+                    android:id="@+id/nightButton"
+                    android:layout_toRightOf="@id/standardButton" />
+
+        </LinearLayout>
 
 </RelativeLayout>

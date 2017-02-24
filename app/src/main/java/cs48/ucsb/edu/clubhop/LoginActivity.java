@@ -67,6 +67,50 @@ public class LoginActivity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                            }
+                        });
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "name, events");  // literally wont give us events
+                request.setParameters(parameters);
+                request.executeAsync();
+
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancel() {
+                textView.setText("Login Cancelled");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                textView.setText("Login Error");
+            }
+        });
+    }
+
+    /*
+    public void login() {
+        callbackManager = CallbackManager.Factory.create();
+        final Intent intent = new Intent(this, MapsActivity.class);
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                final AccessToken token = AccessToken.getCurrentAccessToken();
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        token,
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                try {
+                                    content = response.getJSONObject().getJSONObject("events").getJSONArray("data");
+                                    UserEventsModel.getInstance().loadJSONArray(content);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 //textView.setText( response.getRawResponse() );
                             }
                         });
@@ -82,18 +126,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
                 //startActivity(intent, userBundle);
             }
-
-            @Override
-            public void onCancel() {
-                textView.setText("Login Cancelled");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                textView.setText("Login Error");
-            }
-        });
-    }
+        }
+    }*/
 
     private void checkPermission() {
         if (ContextCompat.checkSelfPermission(this,
