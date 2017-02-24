@@ -48,8 +48,13 @@ public class LoginActivity extends AppCompatActivity {
 
     CallbackManager callbackManager;
 
-	final String readPermissions = "user_events";
-	final String requestedFields = "name,events";
+	final String READ_PERMISSIONS = "user_events";
+
+	// For REQUESTED_FIELDS, always make sure that "events" is at the end so that
+	// SPECIFIC_FIELDS will always pertain to "events" in TOTAL_FIELDS
+	final String REQUESTED_FIELDS = "name,events";
+	final String SPECIFIC_FIELDS = "{id,name,description,type,picture,place,start_time,end_time}";
+	final String TOTAL_FIELDS = REQUESTED_FIELDS + SPECIFIC_FIELDS;
 
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
@@ -70,55 +75,13 @@ public class LoginActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_events");
+        loginButton.setReadPermissions(READ_PERMISSIONS);
         callbackManager = CallbackManager.Factory.create();
 
         checkPermission();
 
-		//setupLoginButton(loginButton, callbackManager, readPermissions, requestedFields);
+		setupLoginButton(loginButton, callbackManager, READ_PERMISSIONS, TOTAL_FIELDS, intent);
 
-		//startActivity(intent);
-		//
-		// Above line SHOULD replace everything below? and the permissions
-
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-                final AccessToken token = AccessToken.getCurrentAccessToken();
-
-                GraphRequest request = GraphRequest.newMeRequest(
-                        token,
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                try {
-                                    content = response.getJSONObject().getJSONObject("events").getJSONArray("data");
-                                    UserEventsModel.getInstance().loadJSONArray(content);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "name, events"); // literally wont give us events
-                request.setParameters(parameters);
-                request.executeAsync();
-
-                startActivity(intent);
-            }
-
-            @Override
-            public void onCancel() {
-                textView.setText("Login Cancelled");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                textView.setText("Login Error");
-            }
-        });
     }
 
     private void checkPermission() {
@@ -163,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 	public void setupLoginButton(LoginButton loginButton, CallbackManager callbackManager,
-			String readPermissions, final String requestedFields) {
+                                 String readPermissions, final String requestedFields, final Intent intent) {
 
 				loginButton.setReadPermissions(readPermissions);
 				loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -176,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
 						//UserEventsModel.getInstance.loadJSONArray(eventsJSONArray);
 						
 						launchRequest(request, requestedFields);
-						//startActivity();
+						startActivity(intent);
 					}
 
 					@Override
@@ -191,26 +154,6 @@ public class LoginActivity extends AppCompatActivity {
 				});
 
 	}
-
-	/*
-	public JSONArray requestEvents(AccessToken accessToken, GraphRequest request) {
-		JSONArray eventsJSONArray;
-		GraphRequest request = GraphRequest.newMeRequest(
-				accessToken,
-				new GraphRequest.GraphJSONObjectCallback() {
-					@Override
-					public void onCompleted(JSONObject object, GraphResponse response) {
-						try {
-							eventsJSONArray = response.getJSONObject().getJSONObject("events").getJSONArray("data");
-							//UserEventsModel.getInstance().loadJSONArray(content);
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					}
-				});
-		return eventsJSONArray;
-	}
-	*/
 
 	public GraphRequest handleEventsRequest(AccessToken accessToken) {
 		GraphRequest request = GraphRequest.newMeRequest(
