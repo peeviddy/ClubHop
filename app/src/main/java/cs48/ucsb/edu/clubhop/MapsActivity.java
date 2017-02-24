@@ -248,11 +248,10 @@ public class MapsActivity extends FragmentActivity implements
             Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
         }
     }
-
     @Override
     public void onLocationChanged(Location location) {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        mGoogleApiClient.disconnect();
+        //mGoogleApiClient.disconnect();
         locRetreived = true;
         handleNewLocation(location);
     }
@@ -282,7 +281,6 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        // TODO: 2/17/2017 Reroute following method call through controller
         new InfoWindowConfigurator().config(marker);
 
         // We return false to indicate that we have not consumed the event and that we wish
