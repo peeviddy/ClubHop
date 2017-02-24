@@ -3,17 +3,16 @@ package cs48.ucsb.edu.clubhop;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 
 // Navigation
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ArrayAdapter;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -29,8 +28,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Marker;
+
+import static cs48.ucsb.edu.clubhop.R.id.map;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
@@ -48,19 +48,12 @@ public class MapsActivity extends FragmentActivity implements
 
 
     protected Location mLastLocation;
-    protected Marker curLocMarker;
     private boolean locRetreived = false;
 
     // Navigation
-    private DrawerHandler drawerHandler;
-    private ListView mDrawerList;
-    private String[] osArray = {"Android", "iOS", "Windows", "OS X", "Linux"};
-    private ArrayAdapter<String> mAdapter;
-
-    // Navigation Toggle switch
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
-    private String mActivityTitle;
+    DrawerLayout drawerLayout;
+    FragmentTransaction fragmentTransaction;
+    NavigationView navigationView;
 
 
     @Override
@@ -70,7 +63,7 @@ public class MapsActivity extends FragmentActivity implements
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment)
-                getSupportFragmentManager().findFragmentById(R.id.map);
+                getSupportFragmentManager().findFragmentById(map);
         mapFragment.getMapAsync(this);
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -80,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements
                     .build();
         }
 
-        //Spinner(filter menu)
+        // Spinner(filter menu)
         Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
         filterMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -95,11 +88,6 @@ public class MapsActivity extends FragmentActivity implements
 
         });
 
-        // Navigation
-        initDrawer();
-        addDrawerItems();
-        setupDrawer();
-
         // Setting up the listener
         UserEventsModel.getInstance().addListener(new ModelListener() {
             @Override
@@ -111,9 +99,38 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
 
-        // Toggle switch in the action bar
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
+        // Navigation
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        // Create click listener for navigationView
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                switch(item.getItemId()) { // get from drawer_menu.xml
+                    case R.id.home_id:
+                        handleNewLocation(mLastLocation);
+                        drawerLayout.closeDrawers();
+
+                    case R.id.settings_id:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.main_container, new SettingsFragment());
+                        fragmentTransaction.commit();
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+
+                    case R.id.logout_id:
+                        Intent myIntent = new Intent(MapsActivity.this, LoginActivity.class);
+                        MapsActivity.this.startActivity(myIntent);
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                }
+
+                return false;
+            }
+        });
     }
 
     private void setUpMap() {
@@ -158,36 +175,6 @@ public class MapsActivity extends FragmentActivity implements
         if (receivedEvents) {
             setUpMap();
         }
-    }
-
-    private void initDrawer() {
-        mDrawerList = (ListView) findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mActivityTitle = getTitle().toString();
-
-        mAdapter = new ArrayAdapter<String>(MapsActivity.this, android.R.layout.simple_list_item_1, osArray);
-
-        drawerHandler = new DrawerHandler();
-    }
-
-    // Helper method to add items and configure the nav list
-    private void addDrawerItems() {
-        drawerHandler.addDrawerItems(mDrawerList, mAdapter, MapsActivity.this);
-    }
-
-    // Helper method for navigation
-    private void setupDrawer() {
-        drawerHandler.setUp(mDrawerToggle, mDrawerLayout, this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
