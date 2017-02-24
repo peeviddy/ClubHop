@@ -115,6 +115,8 @@ public class UserEventsModel {
         return events.get(index);
     }
 
+    public Marker getEventMarker(int index) { return eventMarkers.get(index); }
+
     /**
      * @return The size of the list of FacebookEvents.
      */
