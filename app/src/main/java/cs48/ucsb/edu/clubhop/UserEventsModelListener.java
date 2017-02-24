@@ -7,4 +7,5 @@ public interface UserEventsModelListener {
     // Maybe refactor this into just a general listener?
     public interface UserEventsModel {
         public void onChange();
+    }
 }
