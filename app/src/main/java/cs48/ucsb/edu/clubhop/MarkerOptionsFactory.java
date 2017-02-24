@@ -10,7 +10,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MarkerOptionsFactory {
 
     public MarkerOptions getOptions(FacebookEvent event) {
-        /*
+
         String type = event.getType();
         if (type.equals("public")) {
             return new PublicMarkerOptions().generate(event);
@@ -21,8 +21,8 @@ public class MarkerOptionsFactory {
         } else if (type.equals("group")) {
             return new GroupMarkerOptions().generate(event);
         }
-        else {*/
+        else {
             return new MarkerOptions().position(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
-        //}
+        }
     }
 }

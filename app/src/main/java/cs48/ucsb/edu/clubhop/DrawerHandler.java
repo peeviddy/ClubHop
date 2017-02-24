@@ -9,6 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import cs48.ucsb.edu.clubhop.MapsActivity;
+import cs48.ucsb.edu.clubhop.R;
+
 
 public class DrawerHandler {
 
