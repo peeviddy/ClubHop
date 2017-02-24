@@ -24,7 +24,8 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 
 - The app should launch after a few minutes. On the location request popup, tap "allow"
 - The first screen is a Facebook login button. To get the full ClubHop experience, log in with your Facebook account
-*map will only populate with markers upon successful login*
+
+**map will only populate with markers upon successful login**
 
 ![](http://i.imgur.com/7MUHKkd.png)
 
@@ -39,4 +40,6 @@ Feel free to scroll around and tap on events you would like to attend.
 
 # KNOWN BUGS
 ===============
-1. 
+:beetle: Logging out and logging back in, then tapping an event crashes the app
+:beetle:
+:beetle:
