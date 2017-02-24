@@ -50,6 +50,8 @@ public class MapsActivity extends FragmentActivity implements
     protected Location mLastLocation;
     private boolean locRetreived = false;
 
+    private FilterHandler filterHandler;
+
     // Navigation
     DrawerLayout drawerLayout;
     FragmentTransaction fragmentTransaction;
@@ -75,27 +77,23 @@ public class MapsActivity extends FragmentActivity implements
 
         // Spinner(filter menu)
         Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
-        filterMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                Toast.makeText(getBaseContext(), parentView.getItemAtPosition(position) + " is selected", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
-
-        });
+        filterHandler = new FilterHandler();
+        filterHandler.setUp(filterMenu,getBaseContext());
 
         // Setting up the listener
         UserEventsModel.getInstance().addListener(new ModelListener() {
             @Override
-            public void onChange() {
+            public void onEventsCreated() {
                 receivedEvents = true;
                 if (mMap != null) {
-                    setUpMap();
+                    UserEventsModel.getInstance().generateMarkers(mMap);
+                    //setUpMap();
                 }
+            }
+
+            @Override
+            public void onMarkersCreated() {
+                Toast.makeText(MapsActivity.this, "Markers generated successfully.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -273,7 +271,6 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        // TODO: 2/17/2017 Reroute following method call through controller
         Bundle bundle = new EventPageBundler().makeBundle(marker);
 
         Intent eventPageIntent = new Intent(this, EventPageActivity.class);

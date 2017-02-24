@@ -48,6 +48,9 @@ public class LoginActivity extends AppCompatActivity {
 
     CallbackManager callbackManager;
 
+	final String readPermissions = "user_events";
+	final String requestedFields = "name,events";
+
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
@@ -63,14 +66,20 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_main);
+        final Intent intent = new Intent(this, MapsActivity.class);
+        textView = (TextView) findViewById(R.id.textView);
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("user_events");
-        textView = (TextView) findViewById(R.id.textView);
         callbackManager = CallbackManager.Factory.create();
-        final Intent intent = new Intent(this, MapsActivity.class);
 
         checkPermission();
+
+		//setupLoginButton(loginButton, callbackManager, readPermissions, requestedFields);
+
+		//startActivity(intent);
+		//
+		// Above line SHOULD replace everything below? and the permissions
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -89,7 +98,6 @@ public class LoginActivity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                //textView.setText( response.getRawResponse() );
                             }
                         });
 
@@ -98,11 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                 request.setParameters(parameters);
                 request.executeAsync();
 
-                //ASSUMING USER ID CAN BE STORED AS A STRING
-                //User user = new User("123PLACEHOLDER", "John Doe");
-                //Bundle userBundle = new UserInfoBundler().makeBundle(user);
                 startActivity(intent);
-                //startActivity(intent, userBundle);
             }
 
             @Override
@@ -157,4 +161,86 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
+
+	public void setupLoginButton(LoginButton loginButton, CallbackManager callbackManager,
+			String readPermissions, final String requestedFields) {
+
+				loginButton.setReadPermissions(readPermissions);
+				loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+					@Override
+					public void onSuccess(LoginResult loginResult) {
+
+						final AccessToken accessToken = AccessToken.getCurrentAccessToken();
+
+						GraphRequest request = handleEventsRequest(accessToken);
+						//UserEventsModel.getInstance.loadJSONArray(eventsJSONArray);
+						
+						launchRequest(request, requestedFields);
+						//startActivity();
+					}
+
+					@Override
+					public void onCancel() {
+						textView.setText("Login Cancelled");
+					}
+
+					@Override
+					public void onError(FacebookException error) {
+						textView.setText("Login Error");
+					}
+				});
+
+	}
+
+	/*
+	public JSONArray requestEvents(AccessToken accessToken, GraphRequest request) {
+		JSONArray eventsJSONArray;
+		GraphRequest request = GraphRequest.newMeRequest(
+				accessToken,
+				new GraphRequest.GraphJSONObjectCallback() {
+					@Override
+					public void onCompleted(JSONObject object, GraphResponse response) {
+						try {
+							eventsJSONArray = response.getJSONObject().getJSONObject("events").getJSONArray("data");
+							//UserEventsModel.getInstance().loadJSONArray(content);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+		return eventsJSONArray;
+	}
+	*/
+
+	public GraphRequest handleEventsRequest(AccessToken accessToken) {
+		GraphRequest request = GraphRequest.newMeRequest(
+				accessToken,
+				new GraphRequest.GraphJSONObjectCallback() {
+					@Override
+					public void onCompleted(JSONObject object, GraphResponse response) {
+						try {
+							JSONArray eventsJSONArray = response.getJSONObject().getJSONObject("events").getJSONArray("data");
+							handleJSONArray(eventsJSONArray);
+							//UserEventsModel.getInstance().loadJSONArray(content);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+		return request;
+	}
+
+	public void launchRequest(GraphRequest request, String desiredFields) {
+			Bundle parameters = new Bundle();
+			parameters.putString("fields", desiredFields); // literally wont give us events
+			request.setParameters(parameters);
+			request.executeAsync();
+	}
+
+	public void handleJSONArray(JSONArray events) {
+
+			UserEventsModel.getInstance().loadJSONArray(events);
+
+	}
+
 }
