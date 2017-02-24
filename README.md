@@ -2,12 +2,13 @@ ClubHop
 ==========================
 An app to view Facebook events on Google Maps
 
-=======
-# Running the app
+=================
+# REQUIREMENTS
 =================
 
 Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team tests their app on a Google Pixel XL (Nougat 7.1.1 API 25), and on a Nexus 7 (Marshmallow 6.0.1 API 23).
 
+==================
 # Running the App
 ==================
 
