@@ -18,18 +18,18 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 
 <img src="http://i.imgur.com/q9Busuc.png" width="800px" />
 
-- The app should launch after a few minutes. On the location request popup, tap "allow"
-- The first screen is a Facebook login button. To get the full ClubHop experience, log in with your Facebook account
+1. The app should launch after a few minutes. On the location request popup, tap "allow"
+2. The first screen is a Facebook login button. **To get the full ClubHop experience, log in with your Facebook account**
 
-*map will only populate with markers upon successful login*
+**NOTE:** map will only populate with markers upon successful login
 
 <img src="http://i.imgur.com/7MUHKkd.png" width="450px" />
 
-Welcome to ClubHop! The app should now center in on your location and show you nearby events.
+**Welcome to ClubHop! The app should now center in on your location and show you nearby events.**
 
 <img src="http://i.imgur.com/BIoyZYm.png" width="450px" />
 
-Feel free to scroll around and tap on events you would like to attend.
+**Feel free to scroll around and tap on events you would like to attend.**
 
 <img src="http://i.imgur.com/IhCpNTN.png" width="450px" />
 
