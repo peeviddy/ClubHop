@@ -1,8 +1,11 @@
 package cs48.ucsb.edu.clubhop;
 
+<<<<<<< HEAD
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
+=======
+>>>>>>> master
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +31,7 @@ public class UserEventsModel {
     /**
      * A list of the listeners that are subscribed to the Model.
      */
-    private ArrayList<ModelListener> listeners;
+    private ArrayList<UserEventsModelListener> listeners;
 
     /**
      * The list of events that pertain to the user.
@@ -131,7 +134,7 @@ public class UserEventsModel {
      *
      * @param listener A new listener that would like to subscribe to the model.
      */
-    public void addListener(ModelListener listener) { this.listeners.add(listener); }
+    public void addListener(UserEventsModelListener listener) { this.listeners.add(listener); }
 
     /**
      * Tells all of the subscribed listeners that the model has changed.
