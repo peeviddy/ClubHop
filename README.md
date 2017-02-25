@@ -8,9 +8,10 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 
 ==================
 # Running the App
-1. Open the ClubHop project folder in Android Studio
-2. Plug in your Android device via USB
-3. Click the green play button in the toolbar to start the app. You'll have a selection of devices to choose from.
+1. Open terminal and do a git clone of this repository
+2. Open the ClubHop project folder in Android Studio
+3. Plug in your Android device via USB (or skip this step if using an emulator)
+4. Click the green play button in the toolbar to start the app. You'll have a selection of devices to choose from.
 
 <img src="http://i.imgur.com/tkizRbi.png" width="800px" />
 
