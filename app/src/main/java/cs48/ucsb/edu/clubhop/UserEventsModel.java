@@ -2,6 +2,7 @@ package cs48.ucsb.edu.clubhop;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,12 +30,22 @@ public class UserEventsModel {
      */
     private ArrayList<UserEventsModelListener> listeners;
 
+    public ArrayList<FacebookEvent> getEvents() {
+        return events;
+    }
+
     /**
      * The list of events that pertain to the user.
      */
     private ArrayList<FacebookEvent> events;
 
+    /**
+     * The list of ALL markers for ALL received events
+     */
     private ArrayList<Marker> eventMarkers;
+
+    private ArrayList<FacebookEvent> displayedEvents;
+    private ArrayList<Marker> displayedMarkers;
 
     /**
      * The singleton instance of the model.
@@ -93,16 +104,36 @@ public class UserEventsModel {
         eventMarkers = new ArrayList<>();
     }
 
-    public void generateMarkers(GoogleMap map) {
+    public void initializeMarkers(GoogleMap map) {
         if (events.size() == 0) {
             System.out.println("No events");
             //Toast.makeText(, "", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!displayedMarkers.isEmpty())
+            map.clear();
         eventMarkers = new ArrayList<>();
         for (int i = 0; i < events.size(); ++i) {
             eventMarkers.add(map.addMarker(new MarkerOptionsFactory().getOptions(events.get(i))));
             eventMarkers.get(i).setTag(events.get(i));
+        }
+        displayedMarkers = eventMarkers;
+        displayedEvents = events;
+        notifyMarkerListeners();
+    }
+
+    public void generateTheseMarkers(GoogleMap map, ArrayList<FacebookEvent> theseEvents){
+        if (theseEvents.size() == 0) {
+            System.out.println("No events");
+            //Toast.makeText(, "", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        map.clear();
+        displayedMarkers = new ArrayList<>();
+        displayedEvents = theseEvents;
+        for (int i = 0; i < theseEvents.size(); ++i) {
+            displayedMarkers.add(map.addMarker(new MarkerOptionsFactory().getOptions(theseEvents.get(i))));
+            displayedMarkers.get(i).setTag(theseEvents.get(i));
         }
         notifyMarkerListeners();
     }

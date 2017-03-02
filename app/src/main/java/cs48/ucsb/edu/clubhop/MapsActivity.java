@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.res.Resources;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
-
-// Navigation
-import android.support.v4.widget.DrawerLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -20,11 +18,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -35,6 +33,8 @@ import cs48.ucsb.edu.clubhop.Handlers.MarkerHandler;
 
 import static cs48.ucsb.edu.clubhop.R.id.map;
 
+// Navigation
+
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -44,6 +44,11 @@ public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnMarkerClickListener {
 
     private boolean receivedEvents = false;
+
+    public GoogleMap getmMap() {
+        return mMap;
+    }
+
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private MapsActivity mapsActivityInstance = this;
@@ -80,9 +85,8 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         // Spinner(filter menu)
-        Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
         filterHandler = new FilterHandler();
-        filterHandler.setUp(filterMenu,getBaseContext());
+
 
         markerHandler = new MarkerHandler();
 
@@ -92,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements
             public void onEventsCreated() {
                 receivedEvents = true;
                 if (mMap != null) {
-                    UserEventsModel.getInstance().generateMarkers(mMap);
+                    UserEventsModel.getInstance().initializeMarkers(mMap);
                     //setUpMap();
                 }
             }
@@ -197,6 +201,8 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
 
+        Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
+        filterHandler.setUp(filterMenu,getBaseContext(), mMap);
         //Example markers
         /*
         Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()

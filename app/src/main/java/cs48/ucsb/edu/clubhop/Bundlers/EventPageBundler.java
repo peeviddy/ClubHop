@@ -15,16 +15,12 @@ public class EventPageBundler {
     public Bundle makeBundle(Marker marker) {
         FacebookEvent event = (FacebookEvent) marker.getTag();
         Bundle bundle = new Bundle(5);
-        String title = "An Event Title";
         bundle.putString("Title", event.getTitle());
-        String eventType = "Private";
         bundle.putString("EventType", event.getType());
-        String time = "1:00 - 2:00";
         bundle.putString("Time", event.getStartTime() + " - " + event.getEndTime());
-        String location = "Somewhere location in a place above a tree";
         bundle.putString("Location", event.getLocation().getName());
-        String desc = "Super long string Super long string Super long string Super long string Super long string Super long string Super long string ";
         bundle.putString("Description", event.getDescription());
+        bundle.putString("PictureURL", event.getPictureURL());
         return bundle;
     }
 }
