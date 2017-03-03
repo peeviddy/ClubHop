@@ -78,15 +78,14 @@ public class LoginActivity extends AppCompatActivity {
 		
 		// btw we need to handle the case of the user not giving us permission to see events,
 		// but still being logged in
-		if (currentToken == null || currentToken.getPermissions() == null) {
 
-			loginButton = (LoginButton) findViewById(R.id.login_button);
-			loginButton.setReadPermissions(READ_PERMISSIONS);
-			callbackManager = CallbackManager.Factory.create();
-			checkPermission();
-			setupLoginButton(loginButton, callbackManager, READ_PERMISSIONS, TOTAL_FIELDS, intent);
+		loginButton = (LoginButton) findViewById(R.id.login_button);
+		loginButton.setReadPermissions(READ_PERMISSIONS);
+		callbackManager = CallbackManager.Factory.create();
+		checkPermission();
+		setupLoginButton(loginButton, callbackManager, READ_PERMISSIONS, TOTAL_FIELDS, intent);
 
-		} else {
+		if (!(currentToken == null || currentToken.getPermissions() == null || currentToken.isExpired())) {
 
 			// do request
 			GraphRequest request = handleEventsRequest(currentToken);
