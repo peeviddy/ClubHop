@@ -73,8 +73,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Intent intent = new Intent(this, MapsActivity.class);
         textView = (TextView) findViewById(R.id.textView);
+
+		AccessToken currentToken = AccessToken.getCurrentAccessToken();
 		
-		if (AccessToken.getCurrentAccessToken() == null) {
+		// btw we need to handle the case of the user not giving us permission to see events,
+		// but still being logged in
+		if (currentToken == null || currentToken.getPermissions() == null) {
 
 			loginButton = (LoginButton) findViewById(R.id.login_button);
 			loginButton.setReadPermissions(READ_PERMISSIONS);
@@ -83,11 +87,9 @@ public class LoginActivity extends AppCompatActivity {
 			setupLoginButton(loginButton, callbackManager, READ_PERMISSIONS, TOTAL_FIELDS, intent);
 
 		} else {
-			// btw we need to handle the case of the user not giving us permission to see events,
-			// but still being logged in
 
 			// do request
-			GraphRequest request = handleEventsRequest(AccessToken.getCurrentAccessToken());
+			GraphRequest request = handleEventsRequest(currentToken);
 			launchRequest(request, TOTAL_FIELDS);
 			startActivity(intent);
 
