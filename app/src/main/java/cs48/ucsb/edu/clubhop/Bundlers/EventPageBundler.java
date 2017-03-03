@@ -20,12 +20,12 @@ public class EventPageBundler {
         Bundle bundle = new Bundle(5);
         bundle.putString("Title", event.getTitle());
         bundle.putString("EventType", event.getType());
-        String start = (event.getStartTime().getHours() + ":" + event.getStartTime().getMinutes());
+        String start = (event.getStartTime().toString());
         if(event.getEndTime().equals(new Date(0))){
             bundle.putString("Time", start);
         }
         else{
-            bundle.putString("Time", start + " - " + event.getEndTime().getHours() + ":" + event.getEndTime().getMinutes());
+            bundle.putString("Time", start + " - " + event.getEndTime().toString());
         }
         bundle.putInt("Date", event.getStartTime().getDate());
         bundle.putString("Month", new DateFormatSymbols().getShortMonths()[event.getStartTime().getMonth() -1]);

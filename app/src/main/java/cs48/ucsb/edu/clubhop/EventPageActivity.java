@@ -21,9 +21,9 @@ public class EventPageActivity extends AppCompatActivity {
 
         new DownloadImageTask((ImageView) findViewById(R.id.banner_img_view)).execute(getIntent().getExtras().getString("PictureURL"));
 
-        TextView monthView = (TextView) findViewById(R.id.month_view);
-        monthView.setText(getIntent().getExtras().getString("Month"));
-        TextView dateView = (TextView) findViewById(R.id.date_view);
+        //TextView monthView = (TextView) findViewById(R.id.month_view);
+        //monthView.setText(getIntent().getExtras().getString("Month"));
+        //TextView dateView = (TextView) findViewById(R.id.date_view);
 //      dateView.setText(getIntent().getExtras().getInt("Date"));
         TextView titleView = (TextView) findViewById(R.id.title_view);
         titleView.setText(getIntent().getExtras().getString("Title"));
