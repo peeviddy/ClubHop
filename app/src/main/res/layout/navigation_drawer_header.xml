@@ -15,7 +15,7 @@
         android:id="@+id/profile_photo" />
 
     <TextView
-        android:text="Bryanna Phan"
+        android:text="User Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -27,7 +27,7 @@
         android:id="@+id/user_name" />
 
     <TextView
-        android:text="bryannaphan@umail.ucsb.edu"
+        android:text="UserEmail@umail.ucsb.edu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

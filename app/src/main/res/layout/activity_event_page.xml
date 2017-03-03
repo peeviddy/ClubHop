@@ -19,7 +19,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,7 +84,7 @@
                     android:id="@+id/clock_img_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_audiotrack_light" />
+                    app:srcCompat="@drawable/ic_clock" />
 
                 <TextView
                     android:id="@+id/time_view"
@@ -90,6 +92,7 @@
                     android:autoLink="web"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="7dp"
                     android:layout_weight="1"
                     android:text="Bad bundle read"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -107,7 +110,7 @@
                     android:id="@+id/marker_img_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_audiotrack_light" />
+                    app:srcCompat="@drawable/ic_pin" />
 
                 <TextView
                     android:id="@+id/location_view"
@@ -115,6 +118,7 @@
                     android:autoLink="web"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="7dp"
                     android:layout_weight="1"
                     android:text="Bad bundle read"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
