@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -165,6 +167,11 @@ public class MapsActivity extends FragmentActivity implements
                         break;
 
                     case R.id.logout_id:
+                        // TODO: 3/3/2017 this
+                        // will do something with onActivityResult in LoginActivity to keep
+                        // Facebook stuff out of here111
+                        if (AccessToken.getCurrentAccessToken() != null)
+                            LoginManager.getInstance().logOut();
                         Intent logoutIntent = new Intent(MapsActivity.this, LoginActivity.class);
                         MapsActivity.this.startActivity(logoutIntent);
                         item.setChecked(true);

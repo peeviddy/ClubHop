@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.model.Marker;
 
+import java.text.DateFormatSymbols;
+import java.util.Date;
+
 import cs48.ucsb.edu.clubhop.FacebookEvent;
 
 /**
@@ -17,7 +20,15 @@ public class EventPageBundler {
         Bundle bundle = new Bundle(5);
         bundle.putString("Title", event.getTitle());
         bundle.putString("EventType", event.getType());
-        bundle.putString("Time", event.getStartTime() + " - " + event.getEndTime());
+        String start = (event.getStartTime().getHours() + ":" + event.getStartTime().getMinutes());
+        if(event.getEndTime().equals(new Date(0))){
+            bundle.putString("Time", start);
+        }
+        else{
+            bundle.putString("Time", start + " - " + event.getEndTime().getHours() + ":" + event.getEndTime().getMinutes());
+        }
+        bundle.putInt("Date", event.getStartTime().getDate());
+        bundle.putString("Month", new DateFormatSymbols().getShortMonths()[event.getStartTime().getMonth() -1]);
         bundle.putString("Location", event.getLocation().getName());
         bundle.putString("Description", event.getDescription());
         bundle.putString("PictureURL", event.getPictureURL());
