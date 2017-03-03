@@ -3,11 +3,10 @@ package cs48.ucsb.edu.clubhop;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -74,17 +73,29 @@ public class LoginActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, MapsActivity.class);
         textView = (TextView) findViewById(R.id.textView);
 
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(READ_PERMISSIONS);
-        callbackManager = CallbackManager.Factory.create();
+		AccessToken currentToken = AccessToken.getCurrentAccessToken();
+		
+		// btw we need to handle the case of the user not giving us permission to see events,
+		// but still being logged in
 
-        checkPermission();
-
+		loginButton = (LoginButton) findViewById(R.id.login_button);
+		loginButton.setReadPermissions(READ_PERMISSIONS);
+		callbackManager = CallbackManager.Factory.create();
+		checkPermission();
 		setupLoginButton(loginButton, callbackManager, READ_PERMISSIONS, TOTAL_FIELDS, intent);
+
+		if (!(currentToken == null || currentToken.getPermissions() == null
+				|| currentToken.isExpired() && savedInstanceState == null)) {
+
+			// do request
+			// TODO: 3/3/2017 abstract into method
+			handleUserLoggedIn(intent, currentToken, TOTAL_FIELDS);
+
+		}
 
     }
 
-    private void checkPermission() {
+	private void checkPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -117,14 +128,6 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-	/**
-	 * The onClick() method that allows the user to try out the app without logging in.
-	 */
-    public void testButton(View view) {
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
-    }
-
 	public void setupLoginButton(LoginButton loginButton, CallbackManager callbackManager,
                                  String readPermissions, final String requestedFields, final Intent intent) {
 
@@ -135,11 +138,7 @@ public class LoginActivity extends AppCompatActivity {
 
 						final AccessToken accessToken = AccessToken.getCurrentAccessToken();
 
-						GraphRequest request = handleEventsRequest(accessToken);
-						//UserEventsModel.getInstance.loadJSONArray(eventsJSONArray);
-						
-						launchRequest(request, requestedFields);
-						startActivity(intent);
+						handleUserLoggedIn(intent, accessToken, requestedFields);
 					}
 
 					@Override
@@ -178,6 +177,16 @@ public class LoginActivity extends AppCompatActivity {
 			parameters.putString("fields", desiredFields); // literally wont give us events
 			request.setParameters(parameters);
 			request.executeAsync();
+	}
+
+	/*public void testButton(){
+		handleUserLoggedIn(new Intent(this, MapsActivity.class), AccessToken.getCurrentAccessToken(), TOTAL_FIELDS);
+	}*/
+
+	private void handleUserLoggedIn(Intent intent, AccessToken currentToken, String total_fields) {
+		GraphRequest request = handleEventsRequest(currentToken);
+		launchRequest(request, total_fields);
+		startActivity(intent);
 	}
 
 	public void handleJSONArray(JSONArray events) {

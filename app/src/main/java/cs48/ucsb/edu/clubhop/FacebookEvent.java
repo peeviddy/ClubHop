@@ -3,6 +3,11 @@ package cs48.ucsb.edu.clubhop;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * An event that comes from Facebook. It contains many of the different fields that the user may desire.
  */
@@ -37,12 +42,12 @@ public class FacebookEvent {
     /**
      * The time at which the Event begins.
      */
-    private String startTime;
+    private Date startTime;
 
     /**
      * The time at which the Event ends.
      */
-    private String endTime;
+    private Date endTime;
 
     /**
      * A URL pertaining to the picture that is set for the whole Event.
@@ -56,11 +61,13 @@ public class FacebookEvent {
     FacebookEvent() {
         title = "";
         description = "";
-        int id = 0;
-        String type = "";
-        String startTime = "";
-        String endTime = "";
-        String pictureURL = "";
+        id = 0;
+        type = "";
+		startTime = new Date(0);
+		endTime = new Date(0);
+        //String startTime = "";
+        //String endTime = "";
+        pictureURL = "";
     }
 
     /**
@@ -75,8 +82,9 @@ public class FacebookEvent {
             location = new FacebookLocation(eventObject.getJSONObject("place"));
             id = eventObject.getInt("id");
             type = eventObject.getString("type");
-            startTime = eventObject.getString("start_time");
-            endTime = eventObject.getString("end_time");
+            startTime = convertTime(eventObject.getString("start_time"));
+            endTime = convertTime(eventObject.getString("end_time"));
+            //endTime = eventObject.getString("end_time");
             pictureURL = eventObject.getJSONObject("picture").getJSONObject("data").getString("url");
 
         } catch (JSONException e) {
@@ -126,17 +134,30 @@ public class FacebookEvent {
      *
      * @return The time when the Event starts.
      */
-    public String getStartTime() {
-        return checkForNull(startTime);
+    public Date getStartTime() {
+		return startTime;
+        //return checkForNull(startTime);
     }
 
     /**
      *
      * @return The time when the Event ends.
      */
-    public String getEndTime() {
-        return checkForNull(endTime);
+    public Date getEndTime() {
+		return endTime;
+        //return checkForNull(endTime);
     }
+
+	private Date convertTime(String stringTime) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH);
+		try {
+            return dateFormat.parse(checkForNull(stringTime));
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+            return new Date(0);
+        }
+	}
 
     /**
      *
