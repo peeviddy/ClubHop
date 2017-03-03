@@ -73,14 +73,25 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Intent intent = new Intent(this, MapsActivity.class);
         textView = (TextView) findViewById(R.id.textView);
+		
+		if (AccessToken.getCurrentAccessToken() == null) {
 
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(READ_PERMISSIONS);
-        callbackManager = CallbackManager.Factory.create();
+			loginButton = (LoginButton) findViewById(R.id.login_button);
+			loginButton.setReadPermissions(READ_PERMISSIONS);
+			callbackManager = CallbackManager.Factory.create();
+			checkPermission();
+			setupLoginButton(loginButton, callbackManager, READ_PERMISSIONS, TOTAL_FIELDS, intent);
 
-        checkPermission();
+		} else {
+			// btw we need to handle the case of the user not giving us permission to see events,
+			// but still being logged in
 
-		setupLoginButton(loginButton, callbackManager, READ_PERMISSIONS, TOTAL_FIELDS, intent);
+			// do request
+			GraphRequest request = handleEventsRequest(AccessToken.getCurrentAccessToken());
+			launchRequest(request, TOTAL_FIELDS);
+			startActivity(intent);
+
+		}
 
     }
 
