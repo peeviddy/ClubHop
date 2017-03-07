@@ -3,6 +3,11 @@ package cs48.ucsb.edu.clubhop;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * An event that comes from Facebook. It contains many of the different fields that the user may desire.
  */
@@ -145,7 +150,13 @@ public class FacebookEvent {
 
 	private Date convertTime(String stringTime) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH);
-		return dateFormat.parse(stringTime);
+		try {
+            return dateFormat.parse(checkForNull(stringTime));
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+            return new Date(0);
+        }
 	}
 
     /**

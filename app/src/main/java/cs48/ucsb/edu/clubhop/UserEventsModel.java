@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import cs48.ucsb.edu.clubhop.MarkerOptions.MarkerOptionsFactory;
 
 /**
- *  A class that holds all of the FacebookEvents pertaining to a certain User.
- *
- *  This class is implemented as a singleton with a static instance, allowing
- *  any of the other classes in the project to access the Model's data.
+ * A class that holds all of the FacebookEvents pertaining to a certain User.
+ * <p>
+ * This class is implemented as a singleton with a static instance, allowing
+ * any of the other classes in the project to access the Model's data.
  */
 
 public class UserEventsModel {
 
     /**
-     *  Represents the user that these events pertain to.
+     * Represents the user that these events pertain to.
      */
     private User user;
 
@@ -29,10 +29,6 @@ public class UserEventsModel {
      * A list of the listeners that are subscribed to the Model.
      */
     private ArrayList<UserEventsModelListener> listeners;
-
-    public ArrayList<FacebookEvent> getEvents() {
-        return events;
-    }
 
     /**
      * The list of events that pertain to the user.
@@ -51,6 +47,17 @@ public class UserEventsModel {
      * The singleton instance of the model.
      */
     private static UserEventsModel instance;
+
+    /**
+     * Private constructor that initializes listeners and events to be default ArrayLists.
+     */
+    private UserEventsModel() {
+        listeners = new ArrayList<>();
+        events = new ArrayList<>();
+        eventMarkers = new ArrayList<>();
+        displayedEvents = new ArrayList<>();
+        displayedMarkers = new ArrayList<>();
+    }
 
     /**
      * @return If the instance is not created yet, it will be created. Else, it returns the instance of the UserEventSModel.
@@ -77,6 +84,7 @@ public class UserEventsModel {
 
     /**
      * Takes in a JSONArray of events, turns them into FacebookEvents, and then adds them to the Model.
+     *
      * @param eventArray
      */
     public void loadJSONArray(JSONArray eventArray) {
@@ -95,14 +103,6 @@ public class UserEventsModel {
         notifyEventListeners();
     }
 
-    /**
-     * Private constructor that initializes listeners and events to be default ArrayLists.
-     */
-    private UserEventsModel() {
-        listeners = new ArrayList<>();
-        events = new ArrayList<>();
-        eventMarkers = new ArrayList<>();
-    }
 
     public void initializeMarkers(GoogleMap map) {
         if (events.size() == 0) {
@@ -122,7 +122,7 @@ public class UserEventsModel {
         notifyMarkerListeners();
     }
 
-    public void generateTheseMarkers(GoogleMap map, ArrayList<FacebookEvent> theseEvents){
+    public void generateTheseMarkers(GoogleMap map, ArrayList<FacebookEvent> theseEvents) {
         if (theseEvents.size() == 0) {
             System.out.println("No events");
             //Toast.makeText(, "", Toast.LENGTH_SHORT).show();
@@ -140,6 +140,7 @@ public class UserEventsModel {
 
     /**
      * Returns a single event from within the Model
+     *
      * @param index The index for the desired FacebookEvent.
      * @return FacebookEvent at the given index inside of the Model.
      */
@@ -147,7 +148,13 @@ public class UserEventsModel {
         return events.get(index);
     }
 
-    public Marker getEventMarker(int index) { return eventMarkers.get(index); }
+    public ArrayList<FacebookEvent> getEvents() {
+        return events;
+    }
+
+    public Marker getEventMarker(int index) {
+        return eventMarkers.get(index);
+    }
 
     /**
      * @return The size of the list of FacebookEvents.
@@ -161,7 +168,9 @@ public class UserEventsModel {
      *
      * @param listener A new listener that would like to subscribe to the model.
      */
-    public void addListener(UserEventsModelListener listener) { this.listeners.add(listener); }
+    public void addListener(UserEventsModelListener listener) {
+        this.listeners.add(listener);
+    }
 
     /**
      * Tells all of the subscribed listeners that the model has changed.
