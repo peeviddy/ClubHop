@@ -4,34 +4,38 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.res.Resources;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
-
-// Navigation
-import android.view.View;
-import android.widget.AdapterView;
-import android.support.v4.widget.DrawerLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 
+import cs48.ucsb.edu.clubhop.Bundlers.EventPageBundler;
+import cs48.ucsb.edu.clubhop.Handlers.FilterHandler;
+import cs48.ucsb.edu.clubhop.Handlers.MarkerHandler;
+
 import static cs48.ucsb.edu.clubhop.R.id.map;
+
+// Navigation
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
@@ -42,6 +46,11 @@ public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnMarkerClickListener {
 
     private boolean receivedEvents = false;
+
+    public GoogleMap getmMap() {
+        return mMap;
+    }
+
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private MapsActivity mapsActivityInstance = this;
@@ -49,9 +58,11 @@ public class MapsActivity extends FragmentActivity implements
     public static final String TAG = MapsActivity.class.getSimpleName();
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9001;
 
-
     protected Location mLastLocation;
     private boolean locRetreived = false;
+
+    private FilterHandler filterHandler;
+    private MarkerHandler markerHandler;
 
     // Navigation
     DrawerLayout drawerLayout;
@@ -76,28 +87,25 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         // Spinner(filter menu)
-        Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
-        filterMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                Toast.makeText(getBaseContext(), parentView.getItemAtPosition(position) + " is selected", Toast.LENGTH_LONG).show();
-            }
+        filterHandler = new FilterHandler();
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
 
-        });
+        markerHandler = new MarkerHandler();
 
         // Setting up the UserEventsModel listener
         UserEventsModel.getInstance().addListener(new UserEventsModelListener() {
             @Override
-            public void onChange() {
+            public void onEventsCreated() {
                 receivedEvents = true;
                 if (mMap != null) {
-                    setUpMap();
+                    UserEventsModel.getInstance().initializeMarkers(mMap);
+                    //setUpMap();
                 }
+            }
+
+            @Override
+            public void onMarkersCreated() {
+                Toast.makeText(MapsActivity.this, "Markers generated successfully.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -159,6 +167,11 @@ public class MapsActivity extends FragmentActivity implements
                         break;
 
                     case R.id.logout_id:
+                        // TODO: 3/3/2017 this
+                        // will do something with onActivityResult in LoginActivity to keep
+                        // Facebook stuff out of here111
+                        if (AccessToken.getCurrentAccessToken() != null)
+                            LoginManager.getInstance().logOut();
                         Intent logoutIntent = new Intent(MapsActivity.this, LoginActivity.class);
                         MapsActivity.this.startActivity(logoutIntent);
                         item.setChecked(true);
@@ -174,7 +187,7 @@ public class MapsActivity extends FragmentActivity implements
     private void setUpMap() {
         UserEventsModel model = UserEventsModel.getInstance();
         for (int i = 0; i < model.getSize(); ++i) {
-            new MarkerHandler().create(mMap, model.getEvent(i));
+            markerHandler.create(mMap, model.getEvent(i));
         }
     }
 
@@ -195,6 +208,8 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
 
+        Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
+        filterHandler.setUp(filterMenu,getBaseContext(), mMap);
         //Example markers
         /*
         Marker privateEx = mMap.addMarker(new PrivateMarkerOptions()
@@ -243,7 +258,6 @@ public class MapsActivity extends FragmentActivity implements
         super.onStop();
     }
 
-
     /**
      * Runs when a GoogleApiClient object successfully connects.
      */
@@ -286,11 +300,10 @@ public class MapsActivity extends FragmentActivity implements
             Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
         }
     }
-
     @Override
     public void onLocationChanged(Location location) {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        mGoogleApiClient.disconnect();
+        //mGoogleApiClient.disconnect();
         locRetreived = true;
         handleNewLocation(location);
     }
@@ -311,7 +324,6 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        // TODO: 2/17/2017 Reroute following method call through controller
         Bundle bundle = new EventPageBundler().makeBundle(marker);
 
         Intent eventPageIntent = new Intent(this, EventPageActivity.class);
@@ -321,7 +333,6 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        // TODO: 2/17/2017 Reroute following method call through controller
         new InfoWindowConfigurator().config(marker);
 
         // We return false to indicate that we have not consumed the event and that we wish

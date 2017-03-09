@@ -7,6 +7,10 @@
     <string-array name="planets_array">
         <item> All </item>
         <item> Today </item>
+        <item> Public </item>
+        <item> Private </item>
+        <item> Community </item>
+        <item> Group </item>
     </string-array>
     <string name="latitude_label">Latitude</string>
     <string name="longitude_label">Longitude</string>

@@ -1,0 +1,95 @@
+package cs48.ucsb.edu.clubhop.Handlers;
+
+import android.content.Context;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
+
+import java.util.ArrayList;
+
+import cs48.ucsb.edu.clubhop.FacebookEvent;
+import cs48.ucsb.edu.clubhop.FilterCriteria.Criteria;
+import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaCommunity;
+import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaGroup;
+import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaPrivate;
+import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaPublic;
+import cs48.ucsb.edu.clubhop.UserEventsModel;
+
+public class FilterHandler {
+
+    public void setUp(Spinner filterMenu, final Context context, final GoogleMap map) {
+        filterMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String filter = parentView.getItemAtPosition(position).toString();
+                UserEventsModel model = UserEventsModel.getInstance();
+                ArrayList<FacebookEvent> newEvents;
+                switch (filter) {
+                    case "All":
+                        model.initializeMarkers(map);
+                        Toast.makeText(context, "Showing all events", Toast.LENGTH_SHORT).show();
+                        break;
+                    case "Today":
+                        Toast.makeText(context, "Showing events happening today", Toast.LENGTH_SHORT).show();
+                        break;
+                    case "Public":
+                        Criteria publicEvents = new CriteriaPublic();
+                        newEvents = publicEvents.meetCriteria(model.getEvents());
+                        if (newEvents.isEmpty()) {
+                            Toast.makeText(context, "No events fit those criteria", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            model.generateTheseMarkers(map, newEvents);
+                            Toast.makeText(context, "Showing public events", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    case "Private":
+                        Criteria privateEvents = new CriteriaPrivate();
+                        newEvents = privateEvents.meetCriteria(model.getEvents());
+                        if (newEvents.isEmpty()) {
+                            Toast.makeText(context, "No events fit those criteria", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            model.generateTheseMarkers(map, newEvents);
+                            Toast.makeText(context, "Showing private events", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    case "Community":
+                        Criteria communityEvents = new CriteriaCommunity();
+                        newEvents = communityEvents.meetCriteria(model.getEvents());
+                        if (newEvents.isEmpty()) {
+                            Toast.makeText(context, "No events fit those criteria", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            model.generateTheseMarkers(map, newEvents);
+                            Toast.makeText(context, "Showing community events", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    case "Group":
+                        Criteria groupEvents = new CriteriaGroup();
+                        newEvents = groupEvents.meetCriteria(model.getEvents());
+                        if (newEvents.isEmpty()) {
+                            Toast.makeText(context, "No events fit those criteria", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            model.generateTheseMarkers(map, newEvents);
+                            Toast.makeText(context, "Showing group events", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    default:
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+    }
+}

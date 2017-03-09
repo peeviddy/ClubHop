@@ -3,11 +3,10 @@ package cs48.ucsb.edu.clubhop;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -48,6 +47,14 @@ public class LoginActivity extends AppCompatActivity {
 
     CallbackManager callbackManager;
 
+	final String READ_PERMISSIONS = "user_events";
+
+	// For REQUESTED_FIELDS, always make sure that "events" is at the end so that
+	// SPECIFIC_FIELDS will always pertain to "events" in TOTAL_FIELDS
+	final String REQUESTED_FIELDS = "name,events";
+	final String SPECIFIC_FIELDS = "{id,name,description,type,picture,place,start_time,end_time}";
+	final String TOTAL_FIELDS = REQUESTED_FIELDS + SPECIFIC_FIELDS;
+
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
@@ -63,95 +70,32 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_main);
-
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_events");
-        textView = (TextView) findViewById(R.id.textView);
-        callbackManager = CallbackManager.Factory.create();
         final Intent intent = new Intent(this, MapsActivity.class);
+        textView = (TextView) findViewById(R.id.textView);
 
-        checkPermission();
+		AccessToken currentToken = AccessToken.getCurrentAccessToken();
+		
+		// btw we need to handle the case of the user not giving us permission to see events,
+		// but still being logged in
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
+		loginButton = (LoginButton) findViewById(R.id.login_button);
+		loginButton.setReadPermissions(READ_PERMISSIONS);
+		callbackManager = CallbackManager.Factory.create();
+		checkPermission();
+		setupLoginButton(loginButton, callbackManager, READ_PERMISSIONS, TOTAL_FIELDS, intent);
 
-                final AccessToken token = AccessToken.getCurrentAccessToken();
+		if (!(currentToken == null || currentToken.getPermissions() == null
+				|| currentToken.isExpired() && savedInstanceState == null)) {
 
-                GraphRequest request = GraphRequest.newMeRequest(
-                        token,
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                try {
-                                    content = response.getJSONObject().getJSONObject("events").getJSONArray("data");
-                                    UserEventsModel.getInstance().loadJSONArray(content);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+			// do request
+			// TODO: 3/3/2017 abstract into method
+			handleUserLoggedIn(intent, currentToken, TOTAL_FIELDS);
 
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "name, events");  // literally wont give us events
-                request.setParameters(parameters);
-                request.executeAsync();
+		}
 
-                startActivity(intent);
-            }
-
-            @Override
-            public void onCancel() {
-                textView.setText("Login Cancelled");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                textView.setText("Login Error");
-            }
-        });
     }
 
-    /*
-    public void login() {
-        callbackManager = CallbackManager.Factory.create();
-        final Intent intent = new Intent(this, MapsActivity.class);
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-                final AccessToken token = AccessToken.getCurrentAccessToken();
-
-                GraphRequest request = GraphRequest.newMeRequest(
-                        token,
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                try {
-                                    content = response.getJSONObject().getJSONObject("events").getJSONArray("data");
-                                    UserEventsModel.getInstance().loadJSONArray(content);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                //textView.setText( response.getRawResponse() );
-                            }
-                        });
-
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "name, events"); // literally wont give us events
-                request.setParameters(parameters);
-                request.executeAsync();
-
-                //ASSUMING USER ID CAN BE STORED AS A STRING
-                //User user = new User("123PLACEHOLDER", "John Doe");
-                //Bundle userBundle = new UserInfoBundler().makeBundle(user);
-                startActivity(intent);
-                //startActivity(intent, userBundle);
-            }
-        }
-    }*/
-
-    private void checkPermission() {
+	private void checkPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -184,11 +128,71 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-	/**
-	 * The onClick() method that allows the user to try out the app without logging in.
-	 */
-    public void testButton(View view) {
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
-    }
+	public void setupLoginButton(LoginButton loginButton, CallbackManager callbackManager,
+                                 String readPermissions, final String requestedFields, final Intent intent) {
+
+				loginButton.setReadPermissions(readPermissions);
+				loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+					@Override
+					public void onSuccess(LoginResult loginResult) {
+
+						final AccessToken accessToken = AccessToken.getCurrentAccessToken();
+
+						handleUserLoggedIn(intent, accessToken, requestedFields);
+					}
+
+					@Override
+					public void onCancel() {
+						textView.setText("Login Cancelled");
+					}
+
+					@Override
+					public void onError(FacebookException error) {
+						textView.setText("Login Error");
+					}
+				});
+
+	}
+
+	public GraphRequest handleEventsRequest(AccessToken accessToken) {
+		GraphRequest request = GraphRequest.newMeRequest(
+				accessToken,
+				new GraphRequest.GraphJSONObjectCallback() {
+					@Override
+					public void onCompleted(JSONObject object, GraphResponse response) {
+						try {
+							JSONArray eventsJSONArray = response.getJSONObject().getJSONObject("events").getJSONArray("data");
+							handleJSONArray(eventsJSONArray);
+							//UserEventsModel.getInstance().loadJSONArray(content);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+		return request;
+	}
+
+	public void launchRequest(GraphRequest request, String desiredFields) {
+			Bundle parameters = new Bundle();
+			parameters.putString("fields", desiredFields); // literally wont give us events
+			request.setParameters(parameters);
+			request.executeAsync();
+	}
+
+	/*public void testButton(){
+		handleUserLoggedIn(new Intent(this, MapsActivity.class), AccessToken.getCurrentAccessToken(), TOTAL_FIELDS);
+	}*/
+
+	private void handleUserLoggedIn(Intent intent, AccessToken currentToken, String total_fields) {
+		GraphRequest request = handleEventsRequest(currentToken);
+		launchRequest(request, total_fields);
+		startActivity(intent);
+	}
+
+	public void handleJSONArray(JSONArray events) {
+
+			UserEventsModel.getInstance().loadJSONArray(events);
+
+	}
+
 }
