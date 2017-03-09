@@ -7,4 +7,5 @@ package cs48.ucsb.edu.clubhop;
 public interface UserEventsModelListener {
     public void onEventsCreated();
     public void onMarkersCreated();
+    public void onUserChanged();
 }

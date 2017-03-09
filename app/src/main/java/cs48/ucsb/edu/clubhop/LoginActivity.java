@@ -161,6 +161,7 @@ public class LoginActivity extends AppCompatActivity {
 					@Override
 					public void onCompleted(JSONObject object, GraphResponse response) {
 						try {
+							UserEventsModel.getInstance().setUser(response.getJSONObject());
 							JSONArray eventsJSONArray = response.getJSONObject().getJSONObject("events").getJSONArray("data");
 							handleJSONArray(eventsJSONArray);
 							//UserEventsModel.getInstance().loadJSONArray(content);
