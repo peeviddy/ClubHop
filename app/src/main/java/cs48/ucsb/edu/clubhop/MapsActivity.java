@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,14 +112,13 @@ public class MapsActivity extends FragmentActivity implements
 
             @Override
             public void onUserChanged() {
-                if (UserEventsModel.getInstance() != null) {
-                    // Do stuff to get user name for nav bar
-
-                    //TextView userNameView = (TextView) findViewById(R.id.user_name)
-                    //String userName = UserEventsModel.getInstance().getUser().getName();
-                    //userNameView.setText(userName);
-
-                }
+                // Do stuff to get user name for nav bar
+                //NavigationView navHeaderView = (NavigationView) navigationView.inflateHeaderView(R.layout.navigation_drawer_header);
+                NavigationView navHeaderView = (NavigationView) navigationView.findViewById(R.id.navigation_view);
+                View headerView = navHeaderView.getHeaderView(0);
+                TextView userNameView = (TextView) headerView.findViewById(R.id.user_name);
+                String userName = UserEventsModel.getInstance().getUser().getName();
+                userNameView.setText(userName);
             }
 
         });
@@ -128,6 +128,24 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onStyleChange() {
                 String styleType = SettingsModel.getInstance().getStyleType();
+
+                if (styleType == "night") {
+                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, R.raw.night_style));
+                } else {
+                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, R.raw.standard_style));
+                }
+
+                /*
+                switch (styleType) {
+                    case "night":
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, R.raw.night_style));
+
+                    case "standard":
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, R.raw.standard_style));
+                }
+                */
+
+                /*
                 switch (styleType) {
                     case "night":
                         try {
@@ -142,7 +160,7 @@ public class MapsActivity extends FragmentActivity implements
                             Log.e("MapsActivityRaw", "Can't find style.", e);
                         }
 
-                    default:
+                    case "standard":
                         try {
                             Boolean success = mMap.setMapStyle(
                                     MapStyleOptions.loadRawResourceStyle(
@@ -155,6 +173,7 @@ public class MapsActivity extends FragmentActivity implements
                             Log.e("MapsActivityRaw", "Can't find style.", e);
                         }
                 }
+                */
                 // refreshStyle();
             }
         });
@@ -356,7 +375,7 @@ public class MapsActivity extends FragmentActivity implements
         return false;
     }
 
-    public void refreshStyle() {
+    /*public void refreshStyle() {
         String styleType = SettingsModel.getInstance().getStyleType();
         switch (styleType) {
             case "night":
@@ -385,5 +404,5 @@ public class MapsActivity extends FragmentActivity implements
                     Log.e("MapsActivityRaw", "Can't find style.", e);
                 }
         }
-    }
+    }*/
 }

@@ -27,7 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SettingsModel.getInstance().setStyleType("standard");
                 Toast.makeText(SettingsActivity.this,
-                        "Standard Map Clicked",
+                        "Style type is: " + SettingsModel.getInstance().getStyleType(),
                         Toast.LENGTH_SHORT).show();
                 //Intent newMapsActivity = new Intent(SettingsActivity.this, MapsActivity.class);
                 //SettingsActivity.this.startActivity(newMapsActivity);
@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SettingsModel.getInstance().setStyleType("night");
                 Toast.makeText(SettingsActivity.this,
-                        "Night Map Clicked",
+                        "Style type is: " + SettingsModel.getInstance().getStyleType(),
                         Toast.LENGTH_SHORT).show();
                 //Intent newMapsActivity = new Intent(SettingsActivity.this, MapsActivity.class);
                 //newMapsActivity.putExtra("key", value); //Optional parameters

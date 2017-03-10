@@ -23,7 +23,8 @@ import java.util.StringTokenizer;
 public class SettingsModel {
 
     private String styleType;
-    private GoogleMap map;
+    //private MapsActivity mapsActivity;
+    //private GoogleMap map;
 
     /**
      * A list of the listeners that are subscribed to the SettingsModel.
@@ -62,13 +63,21 @@ public class SettingsModel {
         this.listeners.add(listener);
     }
 
+    /*
+    public void setMapsActivity(MapsActivity mapsActivity) {
+        this.mapsActivity = mapsActivity;
+    }
+    */
+
     public void setStyleType(String styleType) {
+
         if (styleType != null) {
             this.styleType = styleType;
-            notifyListeners();
         } else {
             this.styleType = "standard";
         }
+
+        notifyListeners();
     }
 
     public String getStyleType() {
