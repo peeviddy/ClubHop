@@ -52,10 +52,12 @@ public class LoginActivity extends AppCompatActivity {
 	final String READ_PERMISSIONS = "user_events";
 
 	// For REQUESTED_FIELDS, always make sure that "events" is at the end so that
-	// SPECIFIC_FIELDS will always pertain to "events" in TOTAL_FIELDS
+	// CLOSED_FIELDS will always pertain to "events" in TOTAL_FIELDS
 	final String REQUESTED_FIELDS = "name,events";
-	final String SPECIFIC_FIELDS = "{id,name,description,type,picture,place,start_time,end_time}";
-	final String TOTAL_FIELDS = REQUESTED_FIELDS + SPECIFIC_FIELDS;
+	final String SPECIFIC_FIELDS = "id,name,description,type,picture,place,start_time,end_time";
+	final String CLOSED_FIELDS = "{" + SPECIFIC_FIELDS + "}";
+	//final String CLOSED_FIELDS = "{" + CLOSED_FIELDS + "}";
+	final String TOTAL_FIELDS = REQUESTED_FIELDS + CLOSED_FIELDS;
 
 	ArrayList<GraphRequest> allRequests = new ArrayList<>(); //what if i need to make multiple requests
 
@@ -92,7 +94,11 @@ public class LoginActivity extends AppCompatActivity {
 
 			// do request
 			// TODO: 3/3/2017 abstract into method
-			handleUserLoggedIn(intent, currentToken, TOTAL_FIELDS);
+			/*
+			handleEventsRequest(currentToken, TOTAL_FIELDS);
+			handleNotRepliedEventsRequest(currentToken, SPECIFIC_FIELDS);
+			*/
+			handleUserLoggedIn(intent, currentToken);
 
 		}
 
@@ -141,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
 
 						final AccessToken accessToken = AccessToken.getCurrentAccessToken();
 
-						handleUserLoggedIn(intent, accessToken, requestedFields);
+						handleUserLoggedIn(intent, accessToken);
 					}
 
 					@Override
@@ -157,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	}
 
-	public GraphRequest handleEventsRequest(AccessToken accessToken) {
+	public GraphRequest handleEventsRequest(AccessToken accessToken, String desiredFields) {
 		GraphRequest request = GraphRequest.newMeRequest(
 				accessToken,
 				new GraphRequest.GraphJSONObjectCallback() {
@@ -165,16 +171,22 @@ public class LoginActivity extends AppCompatActivity {
 					public void onCompleted(JSONObject object, GraphResponse response) {
 						try {
 							JSONArray eventsJSONArray = response.getJSONObject().getJSONObject("events").getJSONArray("data");
-							handleJSONArray(eventsJSONArray);
+							UserEventsModel.getInstance().addEvents(eventsJSONArray);
+							//handleJSONArray(eventsJSONArray);
 						} catch (JSONException e) {
 							e.printStackTrace();
+							textView.setText("Failed to get replied events");
 						}
 					}
 				});
+		Bundle parameters = new Bundle();
+		parameters.putString("fields", desiredFields);
+		request.setParameters(parameters);
+		request.executeAsync();
 		return request;
 	}
 
-	public GraphRequest handleNotRepliedEventsRequest(AccessToken accessToken) {
+	public GraphRequest handleNotRepliedEventsRequest(AccessToken accessToken, String desiredFields) {
 		GraphRequest request = GraphRequest.newGraphPathRequest(
 				accessToken,
 				"/me/events/not_replied",
@@ -182,39 +194,46 @@ public class LoginActivity extends AppCompatActivity {
 					@Override
 					public void onCompleted(GraphResponse response) {
 						try {
-							JSONArray eventsJSONArray = response.getJSONObject().getJSONObject("events").getJSONArray("data");
-							addThisToModel(eventsJSONArray);
+							JSONArray eventsJSONArray = response.getJSONObject().getJSONArray("data");
+							UserEventsModel.getInstance().addEvents(eventsJSONArray);
 						} catch (JSONException e) {
 							e.printStackTrace();
+							textView.setText("Failed to get not replied events");
 						}
 					}
 				});
+		Bundle parameters = new Bundle();
+		parameters.putString("fields", desiredFields);
+		request.setParameters(parameters);
+		request.executeAsync();
 		return request;
 	}
 
+	/*
 	public void launchRequest(GraphRequest request, String desiredFields) {
 			Bundle parameters = new Bundle();
 			parameters.putString("fields", desiredFields);
 			request.setParameters(parameters);
 			request.executeAsync();
 	}
+	*/
 
 	/*public void testButton(){
 		handleUserLoggedIn(new Intent(this, MapsActivity.class), AccessToken.getCurrentAccessToken(), TOTAL_FIELDS);
 	}*/
 
-	private void handleUserLoggedIn(Intent intent, AccessToken currentToken, String total_fields) {
+	private void handleUserLoggedIn(Intent intent, AccessToken currentToken) {
+		handleEventsRequest(currentToken, TOTAL_FIELDS);
+		handleNotRepliedEventsRequest(currentToken, SPECIFIC_FIELDS);
+		/*
 		allRequests.add( handleEventsRequest(currentToken) );
 		allRequests.add( handleNotRepliedEventsRequest(currentToken) );
+		*/
+		/*
 		for (int i=0; i < allRequests.size(); ++i)
 			launchRequest( allRequests.get(i), total_fields );
+		*/
 		startActivity(intent);
-	}
-
-	public void handleJSONArray(JSONArray events) {
-
-			UserEventsModel.getInstance().loadJSONArray(events);
-
 	}
 
 	public void addThisToModel(JSONArray events) {
