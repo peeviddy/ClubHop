@@ -127,54 +127,8 @@ public class MapsActivity extends FragmentActivity implements
         SettingsModel.getInstance().addListener(new SettingsModelListener() {
             @Override
             public void onStyleChange() {
-                String styleType = SettingsModel.getInstance().getStyleType();
-
-                if (styleType == "night") {
-                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, R.raw.night_style));
-                } else {
-                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, R.raw.standard_style));
-                }
-
-                /*
-                switch (styleType) {
-                    case "night":
-                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, R.raw.night_style));
-
-                    case "standard":
-                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, R.raw.standard_style));
-                }
-                */
-
-                /*
-                switch (styleType) {
-                    case "night":
-                        try {
-                            Boolean success = mMap.setMapStyle(
-                                    MapStyleOptions.loadRawResourceStyle(
-                                            mapsActivityInstance, R.raw.night_style));
-
-                            if (!success) {
-                                Log.e("MapsActivityRaw", "Style parsing failed.");
-                            }
-                        } catch (Resources.NotFoundException e) {
-                            Log.e("MapsActivityRaw", "Can't find style.", e);
-                        }
-
-                    case "standard":
-                        try {
-                            Boolean success = mMap.setMapStyle(
-                                    MapStyleOptions.loadRawResourceStyle(
-                                            mapsActivityInstance, R.raw.standard_style));
-
-                            if (!success) {
-                                Log.e("MapsActivityRaw", "Style parsing failed.");
-                            }
-                        } catch (Resources.NotFoundException e) {
-                            Log.e("MapsActivityRaw", "Can't find style.", e);
-                        }
-                }
-                */
-                // refreshStyle();
+                int settingStyleID = SettingsModel.getInstance().getCurrentStyleID();
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, settingStyleID));
             }
         });
 
