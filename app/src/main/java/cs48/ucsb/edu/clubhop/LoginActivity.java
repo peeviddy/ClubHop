@@ -23,6 +23,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Activity that handles the user's login. First activity to occur when the app launches.
  */
@@ -55,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 	final String SPECIFIC_FIELDS = "{id,name,description,type,picture,place,start_time,end_time}";
 	final String TOTAL_FIELDS = REQUESTED_FIELDS + SPECIFIC_FIELDS;
 
+	ArrayList<GraphRequest> allRequests = new ArrayList<>(); //what if i need to make multiple requests
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
@@ -163,7 +166,24 @@ public class LoginActivity extends AppCompatActivity {
 						try {
 							JSONArray eventsJSONArray = response.getJSONObject().getJSONObject("events").getJSONArray("data");
 							handleJSONArray(eventsJSONArray);
-							//UserEventsModel.getInstance().loadJSONArray(content);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+		return request;
+	}
+
+	public GraphRequest handleNotRepliedEventsRequest(AccessToken accessToken) {
+		GraphRequest request = GraphRequest.newGraphPathRequest(
+				accessToken,
+				"/me/events/not_replied",
+				new GraphRequest.Callback() {
+					@Override
+					public void onCompleted(GraphResponse response) {
+						try {
+							JSONArray eventsJSONArray = response.getJSONObject().getJSONObject("events").getJSONArray("data");
+							addThisToModel(eventsJSONArray);
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -174,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
 
 	public void launchRequest(GraphRequest request, String desiredFields) {
 			Bundle parameters = new Bundle();
-			parameters.putString("fields", desiredFields); // literally wont give us events
+			parameters.putString("fields", desiredFields);
 			request.setParameters(parameters);
 			request.executeAsync();
 	}
@@ -184,14 +204,22 @@ public class LoginActivity extends AppCompatActivity {
 	}*/
 
 	private void handleUserLoggedIn(Intent intent, AccessToken currentToken, String total_fields) {
-		GraphRequest request = handleEventsRequest(currentToken);
-		launchRequest(request, total_fields);
+		allRequests.add( handleEventsRequest(currentToken) );
+		allRequests.add( handleNotRepliedEventsRequest(currentToken) );
+		for (int i=0; i < allRequests.size(); ++i)
+			launchRequest( allRequests.get(i), total_fields );
 		startActivity(intent);
 	}
 
 	public void handleJSONArray(JSONArray events) {
 
 			UserEventsModel.getInstance().loadJSONArray(events);
+
+	}
+
+	public void addThisToModel(JSONArray events) {
+
+		UserEventsModel.getInstance().addEvents(events);
 
 	}
 

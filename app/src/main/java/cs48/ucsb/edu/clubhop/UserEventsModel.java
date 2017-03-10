@@ -103,6 +103,22 @@ public class UserEventsModel {
         notifyEventListeners();
     }
 
+    public void addEvents(JSONArray eventArray) { // we need a function that can add to the model
+                                                  // specifically for adding not_replied events
+        for (int i = 0; i < eventArray.length(); ++i) {
+            try {
+                FacebookEvent e = new FacebookEvent();
+                e.loadJSONObject( eventArray.getJSONObject(i) );
+                if (e.getLocation() != null)
+                    events.add(e);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+                return;
+            }
+        }
+        notifyEventListeners();
+    }
+
 
     public void initializeMarkers(GoogleMap map) {
         if (events.size() == 0) {
