@@ -40,6 +40,28 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        ImageView retroButton = (ImageView) findViewById(R.id.retroButton);
+        retroButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingsModel.getInstance().setCurrentStyleID(R.raw.retro_style);
+                Toast.makeText(SettingsActivity.this,
+                        "Style type is retro",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageView aubButton = (ImageView) findViewById(R.id.aubButton);
+        aubButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingsModel.getInstance().setCurrentStyleID(R.raw.aubergine_style);
+                Toast.makeText(SettingsActivity.this,
+                        "Style type is aubergine",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
         SettingsModel.getInstance().addListener(new SettingsModelListener() {
             @Override
             public void onStyleChange() {

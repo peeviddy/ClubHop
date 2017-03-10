@@ -14,6 +14,7 @@
 
         <LinearLayout
             android:orientation="horizontal"
+            android:gravity="center|top"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
@@ -29,6 +30,18 @@
                     app:srcCompat="@mipmap/ic_night_map"
                     android:id="@+id/nightButton"
                     android:layout_toRightOf="@id/standardButton" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@mipmap/ic_retro_map"
+                    android:id="@+id/retroButton" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@mipmap/ic_aub_map"
+                    android:id="@+id/aubButton" />
 
         </LinearLayout>
 
