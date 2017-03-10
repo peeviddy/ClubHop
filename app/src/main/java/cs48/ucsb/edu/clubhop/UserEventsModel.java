@@ -83,6 +83,13 @@ public class UserEventsModel {
     }
 
     /**
+     * Gets User's id for the name
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
      * Takes in a JSONArray of events, turns them into FacebookEvents, and then adds them to the Model.
      *
      * @param eventArray

@@ -9,9 +9,9 @@ public class User {
     private int userID;
     private String name;
 
-    public User(int _userID, String _name) {
-        userID = _userID;
-        name = _name;
+    public User(int userID, String name) {
+        this.userID = userID;
+        this.name = name;
     }
 
     public int getID() {

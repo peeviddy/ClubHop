@@ -10,7 +10,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -107,41 +109,26 @@ public class MapsActivity extends FragmentActivity implements
             public void onMarkersCreated() {
                 Toast.makeText(MapsActivity.this, "Markers generated successfully.", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void onUserChanged() {
+                // Do stuff to get user name for nav bar
+                //NavigationView navHeaderView = (NavigationView) navigationView.inflateHeaderView(R.layout.navigation_drawer_header);
+                NavigationView navHeaderView = (NavigationView) navigationView.findViewById(R.id.navigation_view);
+                View headerView = navHeaderView.getHeaderView(0);
+                TextView userNameView = (TextView) headerView.findViewById(R.id.user_name);
+                String userName = UserEventsModel.getInstance().getUser().getName();
+                userNameView.setText(userName);
+            }
+
         });
 
         // Setting up the SettingsModel listener
         SettingsModel.getInstance().addListener(new SettingsModelListener() {
             @Override
             public void onStyleChange() {
-                String styleType = SettingsModel.getInstance().getStyleType();
-                switch (styleType) {
-                    case "night":
-                        try {
-                            Boolean success = mMap.setMapStyle(
-                                    MapStyleOptions.loadRawResourceStyle(
-                                            mapsActivityInstance, R.raw.night_style));
-
-                            if (!success) {
-                                Log.e("MapsActivityRaw", "Style parsing failed.");
-                            }
-                        } catch (Resources.NotFoundException e) {
-                            Log.e("MapsActivityRaw", "Can't find style.", e);
-                        }
-
-                    default:
-                        try {
-                            Boolean success = mMap.setMapStyle(
-                                    MapStyleOptions.loadRawResourceStyle(
-                                            mapsActivityInstance, R.raw.standard_style));
-
-                            if (!success) {
-                                Log.e("MapsActivityRaw", "Style parsing failed.");
-                            }
-                        } catch (Resources.NotFoundException e) {
-                            Log.e("MapsActivityRaw", "Can't find style.", e);
-                        }
-                }
-                // refreshStyle();
+                int settingStyleID = SettingsModel.getInstance().getCurrentStyleID();
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mapsActivityInstance, settingStyleID));
             }
         });
 
@@ -176,6 +163,7 @@ public class MapsActivity extends FragmentActivity implements
                         MapsActivity.this.startActivity(logoutIntent);
                         item.setChecked(true);
                         drawerLayout.closeDrawers();
+                        Toast.makeText(MapsActivity.this, "Successfully Logged Out", Toast.LENGTH_SHORT).show();
                         break;
                 }
 
@@ -341,7 +329,7 @@ public class MapsActivity extends FragmentActivity implements
         return false;
     }
 
-    public void refreshStyle() {
+    /*public void refreshStyle() {
         String styleType = SettingsModel.getInstance().getStyleType();
         switch (styleType) {
             case "night":
@@ -370,5 +358,5 @@ public class MapsActivity extends FragmentActivity implements
                     Log.e("MapsActivityRaw", "Can't find style.", e);
                 }
         }
-    }
+    }*/
 }

@@ -1,5 +1,6 @@
 package cs48.ucsb.edu.clubhop;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -21,9 +22,7 @@ import java.util.StringTokenizer;
  */
 
 public class SettingsModel {
-
-    private String styleType;
-    private GoogleMap map;
+    private int currentStyleID;
 
     /**
      * A list of the listeners that are subscribed to the SettingsModel.
@@ -40,7 +39,9 @@ public class SettingsModel {
      */
     private SettingsModel() {
         listeners = new ArrayList<>();
-        styleType = "";
+        currentStyleID = R.raw.standard_style;
+        //styleIDs = new ArrayList<>();
+        //styleType = "";
     }
 
     /**
@@ -62,17 +63,21 @@ public class SettingsModel {
         this.listeners.add(listener);
     }
 
-    public void setStyleType(String styleType) {
-        if (styleType != null) {
-            this.styleType = styleType;
-            notifyListeners();
-        } else {
-            this.styleType = "standard";
-        }
+    /*
+    public void setMapsActivity(MapsActivity mapsActivity) {
+        this.mapsActivity = mapsActivity;
+    }
+    */
+
+    public int getCurrentStyleID() {
+        return currentStyleID;
     }
 
-    public String getStyleType() {
-        return styleType;
+    // Preconditions: styleID pertains to a Google maps style ID
+    // Postconditions: the current settings will change the map to the style passed in
+    public void setCurrentStyleID(int styleID) {
+        currentStyleID = styleID;
+        notifyListeners();
     }
 
     /**
