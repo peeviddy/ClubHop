@@ -312,7 +312,7 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Bundle bundle = new EventPageBundler().makeBundle(marker);
+        Bundle bundle = new EventPageBundler().makeBundle(marker); // calling makebundle on certain events crashes the app ( RECcess Event )
 
         Intent eventPageIntent = new Intent(this, EventPageActivity.class);
         eventPageIntent.putExtras(bundle);

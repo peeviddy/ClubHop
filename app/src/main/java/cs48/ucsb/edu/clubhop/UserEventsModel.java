@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import cs48.ucsb.edu.clubhop.MarkerOptions.MarkerOptionsFactory;
 
@@ -97,11 +98,13 @@ public class UserEventsModel {
 
     public void addEvents(JSONArray eventArray) { // we need a function that can add to the model
         // specifically for adding not_replied events
+        Date rightNow = new Date();
         for (int i = 0; i < eventArray.length(); ++i) {
             try {
                 FacebookEvent e = new FacebookEvent();
                 e.loadJSONObject( eventArray.getJSONObject(i) );
-                if (e.getLocation() != null)
+                if (    ( e.getLocation()!=null )&&
+                        ( e.getEndTime().after(rightNow) || e.getStartTime().after(rightNow) ))
                     events.add(e);
             } catch (JSONException e1) {
                 e1.printStackTrace();

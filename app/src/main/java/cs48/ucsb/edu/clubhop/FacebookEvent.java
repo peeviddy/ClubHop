@@ -74,7 +74,7 @@ public class FacebookEvent {
      * Turns a JSONObject of an Event into a FacebookEvent.
      * @param eventObject The JSONObject containing all of the information of the Event.
      */
-    public void loadJSONObject(JSONObject eventObject) {
+    public void loadJSONObject(JSONObject eventObject) { //sometimes one of the fields are null causing the crash we saw during 3/10 meeting
         try {
 
             title = eventObject.getString("name");
