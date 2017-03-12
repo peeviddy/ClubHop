@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 /**
  * An event that comes from Facebook. It contains many of the different fields that the user may desire.
@@ -55,6 +56,11 @@ public class FacebookEvent {
     private String pictureURL;
 
     /**
+     * User's RSVP status.
+     */
+    private String rsvp_status;
+
+    /**
      * The constructor sets the Strings to empty Strings so that we don't try to access
      * a null String in the Map.
      */
@@ -68,6 +74,7 @@ public class FacebookEvent {
         //String startTime = "";
         //String endTime = "";
         pictureURL = "";
+        rsvp_status = "";
     }
 
     /**
@@ -86,6 +93,7 @@ public class FacebookEvent {
             endTime = convertTime(eventObject.getString("end_time"));
             //endTime = eventObject.getString("end_time");
             pictureURL = eventObject.getJSONObject("picture").getJSONObject("data").getString("url");
+            rsvp_status = eventObject.getString("rsvp_status");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -146,6 +154,10 @@ public class FacebookEvent {
     public Date getEndTime() {
 		return endTime;
         //return checkForNull(endTime);
+    }
+
+    public String getRsvp_status(){
+        return rsvp_status;
     }
 
 	private Date convertTime(String stringTime) {

@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 	// For REQUESTED_FIELDS, always make sure that "events" is at the end so that
 	// CLOSED_FIELDS will always pertain to "events" in TOTAL_FIELDS
 	final String REQUESTED_FIELDS = "name,events";
-	final String SPECIFIC_FIELDS = "id,name,description,type,picture,place,start_time,end_time";
+	final String SPECIFIC_FIELDS = "id,name,description,type,picture,place,start_time,end_time,rsvp_status";
 	final String CLOSED_FIELDS = "{" + SPECIFIC_FIELDS + "}";
 	//final String CLOSED_FIELDS = "{" + CLOSED_FIELDS + "}";
 	final String TOTAL_FIELDS = REQUESTED_FIELDS + CLOSED_FIELDS;

@@ -195,6 +195,11 @@ public class MapsActivity extends FragmentActivity implements
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch ( SecurityException e ){
+            Toast.makeText(MapsActivity.this, "location permission not granted", Toast.LENGTH_SHORT).show();
+        }
 
         Spinner filterMenu = (Spinner) findViewById(R.id.spinner);
         filterHandler.setUp(filterMenu,getBaseContext(), mMap);
