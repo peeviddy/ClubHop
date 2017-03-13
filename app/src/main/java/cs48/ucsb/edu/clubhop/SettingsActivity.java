@@ -3,12 +3,17 @@ package cs48.ucsb.edu.clubhop;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.audiofx.BassBoost;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.GoogleMap;
 
 public class SettingsActivity extends AppCompatActivity {

@@ -37,8 +37,12 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
+
         <activity android:name=".EventPageActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+
+        <activity android:name=".SettingsActivity"
+            android:label="Settings"
+            android:icon="@drawable/ic_settings" />
     </application>
 
 </manifest>
