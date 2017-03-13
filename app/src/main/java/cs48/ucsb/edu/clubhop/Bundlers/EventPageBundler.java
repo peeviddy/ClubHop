@@ -28,7 +28,7 @@ public class EventPageBundler {
             bundle.putString("Time", start + " - " + event.getEndTime().toString());
         }
         bundle.putInt("Date", event.getStartTime().getDate());
-        bundle.putString("Month", new DateFormatSymbols().getShortMonths()[event.getStartTime().getMonth() -1]); //here we get an out-of-bounds exception sometimes
+        bundle.putString("Month", new DateFormatSymbols().getShortMonths()[event.getStartTime().getMonth()]); //here we get an out-of-bounds exception sometimes
         bundle.putString("Location", event.getLocation().getName());
         bundle.putString("Description", event.getDescription());
         bundle.putString("PictureURL", event.getPictureURL());

@@ -103,8 +103,8 @@ public class UserEventsModel {
             try {
                 FacebookEvent e = new FacebookEvent();
                 e.loadJSONObject( eventArray.getJSONObject(i) );
-                if (    ( e.getLocation()!=null )&&
-                        ( e.getEndTime().after(rightNow) || e.getStartTime().after(rightNow) ))
+                if (    ( e.getLocation()!=null )//&&
+                        /*( e.getEndTime().after(rightNow) || e.getStartTime().after(rightNow) )*/)
                     events.add(e);
             } catch (JSONException e1) {
                 e1.printStackTrace();

@@ -15,9 +15,11 @@ public class CriteriaToday implements Criteria {
     @Override
     public ArrayList<FacebookEvent> meetCriteria(ArrayList<FacebookEvent> events) {
         ArrayList<FacebookEvent> todayEvents = new ArrayList<FacebookEvent>();
-
+        Date today = new Date();
         for(FacebookEvent event : events) {
-            if(true){
+            if( (event.getStartTime().getYear() == today.getYear())
+                    && (event.getStartTime().getMonth() == today.getMonth())
+                    && (event.getStartTime().getDate() == today.getDate()) ) {
                 todayEvents.add(event);
             }
         }
