@@ -15,6 +15,7 @@ public class CriteriaToday implements Criteria {
     @Override
     public ArrayList<FacebookEvent> meetCriteria(ArrayList<FacebookEvent> events) {
         ArrayList<FacebookEvent> todayEvents = new ArrayList<FacebookEvent>();
+
         for(FacebookEvent event : events) {
             if(true){
                 todayEvents.add(event);

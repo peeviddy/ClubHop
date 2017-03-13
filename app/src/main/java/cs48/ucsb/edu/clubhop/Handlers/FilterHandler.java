@@ -119,7 +119,7 @@ public class FilterHandler {
                         if (newEvents.isEmpty()) {
                             Toast.makeText(context, "No events fit those criteria", Toast.LENGTH_SHORT).show();
                             break;
-                        } else {
+                        } else{
                             model.generateTheseMarkers(map, newEvents);
                             Toast.makeText(context, "Showing events you have not replied to", Toast.LENGTH_SHORT).show();
                             break;
