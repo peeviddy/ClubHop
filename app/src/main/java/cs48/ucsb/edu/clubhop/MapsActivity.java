@@ -112,6 +112,9 @@ public class MapsActivity extends FragmentActivity implements
 
             @Override
             public void onUserChanged() {
+                // TODO: get user name printed;
+                // right now it gets the name, but won't put it onto the nav drawer layout for some reason
+
                 // Do stuff to get user name for nav bar
                 //NavigationView navHeaderView = (NavigationView) navigationView.inflateHeaderView(R.layout.navigation_drawer_header);
                 NavigationView navHeaderView = (NavigationView) navigationView.findViewById(R.id.navigation_view);
@@ -217,7 +220,6 @@ public class MapsActivity extends FragmentActivity implements
         Marker groupEx = mMap.addMarker(new GroupMarkerOptions()
                 .generate(new LatLng(34.413686, -119.859485)));
         */
-        // refreshStyle();
         if (receivedEvents) {
             setUpMap();
         }
@@ -333,35 +335,4 @@ public class MapsActivity extends FragmentActivity implements
         // marker is centered and for the marker's info window to open, if it has one).
         return false;
     }
-
-    /*public void refreshStyle() {
-        String styleType = SettingsModel.getInstance().getStyleType();
-        switch (styleType) {
-            case "night":
-                try {
-                    Boolean success = mMap.setMapStyle(
-                            MapStyleOptions.loadRawResourceStyle(
-                                    mapsActivityInstance, R.raw.night_style));
-
-                    if (!success) {
-                        Log.e("MapsActivityRaw", "Style parsing failed.");
-                    }
-                } catch (Resources.NotFoundException e) {
-                    Log.e("MapsActivityRaw", "Can't find style.", e);
-                }
-
-            default:
-                try {
-                    Boolean success = mMap.setMapStyle(
-                            MapStyleOptions.loadRawResourceStyle(
-                                    mapsActivityInstance, R.raw.standard_style));
-
-                    if (!success) {
-                        Log.e("MapsActivityRaw", "Style parsing failed.");
-                    }
-                } catch (Resources.NotFoundException e) {
-                    Log.e("MapsActivityRaw", "Can't find style.", e);
-                }
-        }
-    }*/
 }
