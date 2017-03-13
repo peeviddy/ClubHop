@@ -222,7 +222,13 @@ public class MapsActivity extends FragmentActivity implements
         */
         if (receivedEvents) {
             setUpMap();
+            NavigationView navHeaderView = (NavigationView) navigationView.findViewById(R.id.navigation_view);
+            View headerView = navHeaderView.getHeaderView(0);
+            TextView userNameView = (TextView) headerView.findViewById(R.id.user_name);
+            String userName = UserEventsModel.getInstance().getUser().getName();
+            userNameView.setText(userName);
         }
+
     }
 
     @Override
