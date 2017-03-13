@@ -12,10 +12,14 @@ import java.util.ArrayList;
 
 import cs48.ucsb.edu.clubhop.FacebookEvent;
 import cs48.ucsb.edu.clubhop.FilterCriteria.Criteria;
+import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaAttending;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaCommunity;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaGroup;
+import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaMaybe;
+import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaNotReplied;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaPrivate;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaPublic;
+import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaToday;
 import cs48.ucsb.edu.clubhop.UserEventsModel;
 
 public class FilterHandler {
@@ -33,8 +37,16 @@ public class FilterHandler {
                         Toast.makeText(context, "Showing all events", Toast.LENGTH_SHORT).show();
                         break;
                     case "Today":
-                        Toast.makeText(context, "Showing events happening today", Toast.LENGTH_SHORT).show();
-                        break;
+                        Criteria todayEvents = new CriteriaToday();
+                        newEvents = todayEvents.meetCriteria(model.getEvents());
+                        if (newEvents.isEmpty()) {
+                            Toast.makeText(context, "No events fit those criteria", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            model.generateTheseMarkers(map, newEvents);
+                            Toast.makeText(context, "Showing events happening today", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
                     case "Public":
                         Criteria publicEvents = new CriteriaPublic();
                         newEvents = publicEvents.meetCriteria(model.getEvents());
@@ -77,6 +89,39 @@ public class FilterHandler {
                         } else {
                             model.generateTheseMarkers(map, newEvents);
                             Toast.makeText(context, "Showing group events", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    case "Attending":
+                        Criteria attendingEvents = new CriteriaAttending();
+                        newEvents = attendingEvents.meetCriteria(model.getEvents());
+                        if (newEvents.isEmpty()) {
+                            Toast.makeText(context, "No events fit those criteria", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            model.generateTheseMarkers(map, newEvents);
+                            Toast.makeText(context, "Showing events you are attending", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    case "Maybe":
+                        Criteria maybeEvents = new CriteriaMaybe();
+                        newEvents = maybeEvents.meetCriteria(model.getEvents());
+                        if (newEvents.isEmpty()) {
+                            Toast.makeText(context, "No events fit those criteria", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            model.generateTheseMarkers(map, newEvents);
+                            Toast.makeText(context, "Showing events you responded 'maybe' to", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    case "Not Replied":
+                        Criteria nRepEvents = new CriteriaNotReplied();
+                        newEvents = nRepEvents.meetCriteria(model.getEvents());
+                        if (newEvents.isEmpty()) {
+                            Toast.makeText(context, "No events fit those criteria", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            model.generateTheseMarkers(map, newEvents);
+                            Toast.makeText(context, "Showing events you have not replied to", Toast.LENGTH_SHORT).show();
                             break;
                         }
                     default:

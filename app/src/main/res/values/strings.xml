@@ -11,6 +11,9 @@
         <item> Private </item>
         <item> Community </item>
         <item> Group </item>
+        <item> Attending </item>
+        <item> Maybe </item>
+        <item> Not Replied </item>
     </string-array>
     <string name="latitude_label">Latitude</string>
     <string name="longitude_label">Longitude</string>
