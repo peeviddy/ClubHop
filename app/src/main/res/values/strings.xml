@@ -24,4 +24,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="setting_style_change">Pick one to change the maps style:</string>
+    <string name="map_style">Map style successfully changed to </string>
+
+    <string name="logout_success">Successfully Logged Out</string>
 </resources>

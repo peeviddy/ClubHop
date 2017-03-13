@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SettingsModel.getInstance().setCurrentStyleID(R.raw.standard_style);
                 Toast.makeText(SettingsActivity.this,
-                        "Style type is standard",
+                        "Map style successfully changed to Standard",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SettingsModel.getInstance().setCurrentStyleID(R.raw.night_style);
                 Toast.makeText(SettingsActivity.this,
-                        "Style type is night",
+                        "Map style successfully changed to Night",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -51,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SettingsModel.getInstance().setCurrentStyleID(R.raw.retro_style);
                 Toast.makeText(SettingsActivity.this,
-                        "Style type is retro",
+                        "Map style successfully changed to Retro",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -62,7 +62,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SettingsModel.getInstance().setCurrentStyleID(R.raw.aubergine_style);
                 Toast.makeText(SettingsActivity.this,
-                        "Style type is aubergine",
+                        "Map style successfully changed to Aubergine",
                         Toast.LENGTH_SHORT).show();
             }
         });

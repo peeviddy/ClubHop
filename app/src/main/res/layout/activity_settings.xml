@@ -13,7 +13,7 @@
     tools:context="cs48.ucsb.edu.clubhop.SettingsActivity">
 
     <TextView
-        android:text="Pick one to change the maps style:"
+        android:text="@string/setting_style_change"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
