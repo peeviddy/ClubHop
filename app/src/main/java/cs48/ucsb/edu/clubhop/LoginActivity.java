@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 	//final String CLOSED_FIELDS = "{" + CLOSED_FIELDS + "}";
 	final String TOTAL_FIELDS = REQUESTED_FIELDS + CLOSED_FIELDS;
 
-	ArrayList<GraphRequest> allRequests = new ArrayList<>(); //what if i need to make multiple requests
+	//ArrayList<GraphRequest> allRequests = new ArrayList<>(); //what if i need to make multiple requests
 
     final private int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
@@ -237,10 +237,12 @@ public class LoginActivity extends AppCompatActivity {
 		startActivity(intent);
 	}
 
+	/*
 	public void addThisToModel(JSONArray events) {
 
 		UserEventsModel.getInstance().addEvents(events);
 
 	}
+	*/
 
 }
