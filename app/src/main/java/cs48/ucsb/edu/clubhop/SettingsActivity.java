@@ -67,11 +67,13 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        /*
         SettingsModel.getInstance().addListener(new SettingsModelListener() {
             @Override
             public void onStyleChange() {
 
             }
         });
+        */
     }
 }
