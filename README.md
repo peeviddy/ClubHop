@@ -50,7 +50,7 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 
 **If you need directions to an event, tap the blue arrow button in the corner to open Google Maps navigation.**
 
-<img src="http://i.imgur.com/5PiPHRw.png" width="430px" /> <img src="http://i.imgur.com/jgcLqA2.png" width="430px" />
+<img src="http://i.imgur.com/6UQo22h.png" width="430px" /> <img src="http://i.imgur.com/jgcLqA2.png" width="430px" />
   <br/>
   <br/>
   <br/>
