@@ -30,6 +30,7 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 2. The first screen is a Facebook login button. Upon successful login, ClubHop will ask Facebook for the events you have been invited to (excluding the ones you marked "can't go" or "ignore"). It parses the JSON from the API call and initializes its own local copy of your events, then displays them on the map view. **You need a Facebook account in order to make use of the app.**
 
 **Welcome to ClubHop! The app should now center in on your location and show you nearby events.**
+
 <img src="http://i.imgur.com/VreEDMk.png" width="430px" /> <img src="http://i.imgur.com/f9hrV1z.png" width="430px" />
   <br/>
     <br/>
@@ -37,17 +38,18 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 
 # Using the App
 
-
 **Tap the marker and its info window to see more information about the event.**
 <img src="http://i.imgur.com/5PiPHRw.png" width="430px" /> <img src="http://i.imgur.com/1aHKfSN.png" width="430px" />
 
-**NOTE** Events without locations will not appear on the map, so make sure that your event has a location set.
+**NOTE:** Events without locations will not appear on the map, so make sure that your event has a location set.
 
   <br/>
   <br/>
   <br/>
 
-If you need directions to the event, tap the blue arrow button in the corner to open Google Maps navigation.
+**If you need directions to the event, tap the blue arrow button in the corner to open Google Maps navigation.**
+
+<img src="http://i.imgur.com/pBKw9.png" width="430px" />
 
   <br/>
   <br/>
