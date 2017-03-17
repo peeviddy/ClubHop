@@ -2,7 +2,7 @@ package cs48.ucsb.edu.clubhop.FilterCriteria;
 
 import java.util.ArrayList;
 
-import cs48.ucsb.edu.clubhop.Facebook.FacebookEvent;
+import cs48.ucsb.edu.clubhop.User.FacebookEvent;
 
 
 /**

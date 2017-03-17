@@ -2,7 +2,7 @@ package cs48.ucsb.edu.clubhop.Handlers;
 
 import com.google.android.gms.maps.GoogleMap;
 
-import cs48.ucsb.edu.clubhop.Facebook.FacebookEvent;
+import cs48.ucsb.edu.clubhop.User.FacebookEvent;
 import cs48.ucsb.edu.clubhop.MarkerOptions.MarkerOptionsFactory;
 
 /**

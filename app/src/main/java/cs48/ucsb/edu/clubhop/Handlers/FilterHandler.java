@@ -10,7 +10,7 @@ import com.google.android.gms.maps.GoogleMap;
 
 import java.util.ArrayList;
 
-import cs48.ucsb.edu.clubhop.Facebook.FacebookEvent;
+import cs48.ucsb.edu.clubhop.User.FacebookEvent;
 import cs48.ucsb.edu.clubhop.FilterCriteria.Criteria;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaAttending;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaCommunity;

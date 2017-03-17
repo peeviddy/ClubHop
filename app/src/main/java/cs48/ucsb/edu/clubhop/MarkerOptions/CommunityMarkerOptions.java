@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import cs48.ucsb.edu.clubhop.Facebook.FacebookEvent;
+import cs48.ucsb.edu.clubhop.User.FacebookEvent;
 
 /**
  * Created by Joel on 2/17/2017.

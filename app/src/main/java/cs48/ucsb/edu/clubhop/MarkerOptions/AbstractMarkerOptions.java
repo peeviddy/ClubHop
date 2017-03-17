@@ -2,7 +2,7 @@ package cs48.ucsb.edu.clubhop.MarkerOptions;
 
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import cs48.ucsb.edu.clubhop.Facebook.FacebookEvent;
+import cs48.ucsb.edu.clubhop.User.FacebookEvent;
 
 /**
  * This is an abstract class for making different MarkerOptions

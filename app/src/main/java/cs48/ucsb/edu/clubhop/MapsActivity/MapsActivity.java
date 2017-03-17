@@ -56,8 +56,6 @@ public class MapsActivity extends FragmentActivity implements
 
     private boolean receivedEvents = false;
 
-
-
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private MapsActivity mapsActivityInstance = this;
