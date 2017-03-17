@@ -29,7 +29,7 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 1. The app should launch after a few minutes. On the location request popup, tap "allow"
 2. The first screen is a Facebook login button. Upon successful login, ClubHop will ask Facebook for the events you have been invited to (excluding the ones you marked "can't go" or "ignore"). It parses the JSON from the API call and initializes its own local copy of your events, then displays them on the map view. **You need a Facebook account in order to make use of the app.**
 
-<img src="http://i.imgur.com/VreEDMk.png" width="450px" />
+<img src="http://i.imgur.com/VreEDMk.png" width="450px" /> <img src="http://i.imgur.com/f9hrV1z.png" width="450px" />
   <br/>
     <br/>
       <br/>
