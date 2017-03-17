@@ -68,6 +68,6 @@ If you need directions to the event, tap the blue arrow button in the corner to 
 
 Previously, if the user switched to a different app and then returned to ClubHop, they would have to log out and log back in for ClubHop to display their events again. Our team abstracted out the API calls so that the map can be populated in all kinds of situations (like when you're multitasking on your phone)
 
-==================
-# KNOWN BUGS
+
+## KNOWN BUGS
 :ant: switching quickly between filters makes the toast update kinda slow
