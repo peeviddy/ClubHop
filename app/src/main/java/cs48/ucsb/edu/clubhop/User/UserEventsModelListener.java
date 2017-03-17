@@ -1,4 +1,4 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.User;
 
 /**
  * A listener that will be notified when the model changes.

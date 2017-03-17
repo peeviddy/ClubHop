@@ -1,11 +1,9 @@
 package cs48.ucsb.edu.clubhop.FilterCriteria;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.CancellationException;
 
-import cs48.ucsb.edu.clubhop.FacebookEvent;
+import cs48.ucsb.edu.clubhop.Facebook.FacebookEvent;
 
 /**
  * Created by Joel on 3/1/2017.

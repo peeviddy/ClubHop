@@ -1,4 +1,4 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.User;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
+import cs48.ucsb.edu.clubhop.Facebook.FacebookEvent;
 import cs48.ucsb.edu.clubhop.MarkerOptions.MarkerOptionsFactory;
 
 /**

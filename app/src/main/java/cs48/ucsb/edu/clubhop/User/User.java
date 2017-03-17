@@ -1,4 +1,4 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.User;
 
 /**
  * Created by Joel on 2/17/2017.

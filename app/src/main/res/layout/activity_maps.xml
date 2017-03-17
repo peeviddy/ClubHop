@@ -27,7 +27,7 @@
                 map:cameraZoom="16"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="cs48.ucsb.edu.clubhop.MapsActivity" />
+                tools:context="cs48.ucsb.edu.clubhop.MapsActivity.MapsActivity" />
 
             <Spinner
                 android:layout_width="wrap_content"

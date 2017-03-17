@@ -2,7 +2,7 @@ package cs48.ucsb.edu.clubhop.Bundlers;
 
 import android.os.Bundle;
 
-import cs48.ucsb.edu.clubhop.User;
+import cs48.ucsb.edu.clubhop.User.User;
 
 /**
  * Created by Joel on 2/17/2017.

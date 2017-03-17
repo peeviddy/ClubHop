@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="cs48.ucsb.edu.clubhop.SettingsActivity">
+    tools:context="cs48.ucsb.edu.clubhop.Settings.SettingsActivity">
 
     <TextView
         android:text="@string/setting_style_change"

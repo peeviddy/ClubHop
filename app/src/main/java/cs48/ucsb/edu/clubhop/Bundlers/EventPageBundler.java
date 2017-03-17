@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.Marker;
 import java.text.DateFormatSymbols;
 import java.util.Date;
 
-import cs48.ucsb.edu.clubhop.FacebookEvent;
+import cs48.ucsb.edu.clubhop.Facebook.FacebookEvent;
 
 /**
  * Created by Joel on 2/14/2017.

@@ -1,4 +1,4 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.Settings;
 
 /**
  * Created by bryannaphan on 2/23/17.

@@ -23,7 +23,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import cs48.ucsb.edu.clubhop.MapsActivity.MapsActivity;
+import cs48.ucsb.edu.clubhop.User.UserEventsModel;
 
 /**
  * Activity that handles the user's login. First activity to occur when the app launches.

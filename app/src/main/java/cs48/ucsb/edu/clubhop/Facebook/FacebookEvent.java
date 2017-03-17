@@ -1,4 +1,4 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.Facebook;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 /**
  * An event that comes from Facebook. It contains many of the different fields that the user may desire.

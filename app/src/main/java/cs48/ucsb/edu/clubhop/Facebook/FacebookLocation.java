@@ -1,4 +1,4 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.Facebook;
 
 import org.json.JSONException;
 import org.json.JSONObject;

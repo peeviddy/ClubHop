@@ -1,8 +1,7 @@
-package cs48.ucsb.edu.clubhop;
+package cs48.ucsb.edu.clubhop.MapsActivity;
 
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -32,8 +31,16 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 
 import cs48.ucsb.edu.clubhop.Bundlers.EventPageBundler;
+import cs48.ucsb.edu.clubhop.EventPageActivity;
 import cs48.ucsb.edu.clubhop.Handlers.FilterHandler;
 import cs48.ucsb.edu.clubhop.Handlers.MarkerHandler;
+import cs48.ucsb.edu.clubhop.LoginActivity;
+import cs48.ucsb.edu.clubhop.R;
+import cs48.ucsb.edu.clubhop.Settings.SettingsActivity;
+import cs48.ucsb.edu.clubhop.Settings.SettingsModel;
+import cs48.ucsb.edu.clubhop.Settings.SettingsModelListener;
+import cs48.ucsb.edu.clubhop.User.UserEventsModel;
+import cs48.ucsb.edu.clubhop.User.UserEventsModelListener;
 
 import static cs48.ucsb.edu.clubhop.R.id.map;
 
@@ -49,9 +56,7 @@ public class MapsActivity extends FragmentActivity implements
 
     private boolean receivedEvents = false;
 
-    public GoogleMap getmMap() {
-        return mMap;
-    }
+
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -340,5 +345,9 @@ public class MapsActivity extends FragmentActivity implements
         // for the default behavior to occur (which is for the camera to move such that the
         // marker is centered and for the marker's info window to open, if it has one).
         return false;
+    }
+
+    public GoogleMap getmMap() {
+        return mMap;
     }
 }

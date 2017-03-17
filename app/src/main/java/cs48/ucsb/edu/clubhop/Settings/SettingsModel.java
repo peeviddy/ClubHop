@@ -1,14 +1,8 @@
-package cs48.ucsb.edu.clubhop;
-
-import android.content.Intent;
-import android.content.res.Resources;
-import android.util.Log;
-
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.MapStyleOptions;
+package cs48.ucsb.edu.clubhop.Settings;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
+
+import cs48.ucsb.edu.clubhop.R;
 
 /**
  * Created by bryannaphan on 2/23/17.

@@ -10,7 +10,7 @@ import com.google.android.gms.maps.GoogleMap;
 
 import java.util.ArrayList;
 
-import cs48.ucsb.edu.clubhop.FacebookEvent;
+import cs48.ucsb.edu.clubhop.Facebook.FacebookEvent;
 import cs48.ucsb.edu.clubhop.FilterCriteria.Criteria;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaAttending;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaCommunity;
@@ -20,7 +20,7 @@ import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaNotReplied;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaPrivate;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaPublic;
 import cs48.ucsb.edu.clubhop.FilterCriteria.CriteriaToday;
-import cs48.ucsb.edu.clubhop.UserEventsModel;
+import cs48.ucsb.edu.clubhop.User.UserEventsModel;
 
 public class FilterHandler {
 
