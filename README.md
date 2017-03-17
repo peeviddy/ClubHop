@@ -39,6 +39,7 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 # Using the App
 
 **Tap the marker and its info window to see more information about the event.**
+
 <img src="http://i.imgur.com/5PiPHRw.png" width="430px" /> <img src="http://i.imgur.com/1aHKfSN.png" width="430px" />
 
 **NOTE:** Events without locations will not appear on the map, so make sure that your event has a location set.
@@ -63,17 +64,17 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
   <br/>
 
 
-**Swipe left to view the settings pane. From here, you can change the map style, log out, or return to the map view**
+**Swipe left to view the nav bar. From here, you can change the map style, log out, or return to the map view**
 
-<img src="http://i.imgur.com/sdnuHMJ.png" width="266px" /><img src="http://i.imgur.com/cNGOEiV.png" width="266px" /> <img src="http://i.imgur.com/MYK8UGS.png" width="266px" />
+<img src="http://i.imgur.com/sdnuHMJ.png" width="286px" /><img src="http://i.imgur.com/cNGOEiV.png" width="286px" /> <img src="http://i.imgur.com/MYK8UGS.png" width="286px" />
   <br/>
   <br/>
   <br/>
 
 
-**All done**
+**All done! Open the nav bar and tap 'log out'**
 
-<img src="http://i.imgur.com/KxvV6ND.png" width="450px" />
+<img src="http://i.imgur.com/sdnuHMJ.png" width="430px" /> <img src="http://i.imgur.com/KxvV6ND.png" width="430px" />
   <br/>
   <br/>
   <br/>
