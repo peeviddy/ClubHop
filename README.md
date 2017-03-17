@@ -30,7 +30,7 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 2. The first screen is a Facebook login button. Upon successful login, ClubHop will ask Facebook for the events you have been invited to (excluding the ones you marked "can't go" or "ignore"). It parses the JSON from the API call and initializes its own local copy of your events, then displays them on the map view. **You need a Facebook account in order to make use of the app.**
 
 **Welcome to ClubHop! The app should now center in on your location and show you nearby events.**
-<img src="http://i.imgur.com/VreEDMk.png" width="450px" /> <img src="http://i.imgur.com/f9hrV1z.png" width="400px" />
+<img src="http://i.imgur.com/VreEDMk.png" width="430px" /> <img src="http://i.imgur.com/f9hrV1z.png" width="430px" />
   <br/>
     <br/>
       <br/>
@@ -39,7 +39,7 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 
 
 **Tap the marker and its info window to see more information about the event.**
-<img src="http://i.imgur.com/5PiPHRw.png" width="400px" /> <img src="http://i.imgur.com/1aHKfSN.png" width="400px" />
+<img src="http://i.imgur.com/5PiPHRw.png" width="430px" /> <img src="http://i.imgur.com/1aHKfSN.png" width="430px" />
 
 **NOTE** Events without locations will not appear on the map, so make sure that your event has a location set.
 
@@ -56,7 +56,7 @@ If you need directions to the event, tap the blue arrow button in the corner to 
 
 **Use the filter menu in the upper right corner to only display specific events. In this case, there are no events marked 'maybe' in my area**
 
-<img src="http://i.imgur.com/aw4RveZ.png" width="400px" /> <img src="http://i.imgur.com/eMhq53o.png" width="400px" />
+<img src="http://i.imgur.com/aw4RveZ.png" width="430px" /> <img src="http://i.imgur.com/eMhq53o.png" width="430px" />
   <br/>
   <br/>
   <br/>
