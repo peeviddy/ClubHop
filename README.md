@@ -72,7 +72,7 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
   <br/>
 
 
-**All done! Open the nav bar and tap 'log out'**
+**All done! Open the nav bar and tap 'Logout' (or just leave yourself logged in for next time)**
 
 <img src="http://i.imgur.com/sdnuHMJ.png" width="430px" /> <img src="http://i.imgur.com/KxvV6ND.png" width="430px" />
   <br/>
@@ -86,8 +86,6 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 
   <br/>
   <br/>
-  <br/>
-
-
+  
 ## KNOWN BUGS
 :ant: switching quickly between filters makes the toast update kinda slow
