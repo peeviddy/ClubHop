@@ -1,5 +1,5 @@
 # ClubHop
-*An app to view Facebook events on Google Maps*
+*Ever get confused by all the Facebook events you're invited to? Do you ever wish you could have them all on a neat little map? Event logistics can get disorganized and confusing. ClubHop is here to help you make better, more informed choices about Facebook events you're invited to and which ones you can/should even go to.*
   <br/>
     <br/>
 
