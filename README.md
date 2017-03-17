@@ -38,36 +38,17 @@ Must be using Android 5.0.2 and above, and API 21 and above. The ClubHop team te
 
 **Welcome to ClubHop! The app should now center in on your location and show you nearby events.**
 
-<img src="http://i.imgur.com/f9hrV1z.png" width="450px" />
+<img src="http://i.imgur.com/f9hrV1z.png" width="400px" /> <img src="http://i.imgur.com/5PiPHRw.png" width="400px" />
 **NOTE** Events without locations will not appear on the map, so make sure that your event has a location set.
-
-  <br/>
-    <br/>
-      <br/>
-
-
-**Feel free to scroll around and tap on events you would like to attend.**
-
-<img src="http://i.imgur.com/5PiPHRw.png" width="450px" />
-
 If you need directions to the event, tap the blue arrow button in the corner to open Google Maps navigation.
   <br/>
-    <br/>
-  <br/>
-
-
-
-**Tap the marker and its info window to see more information about the event.**
-
-<img src="http://i.imgur.com/1aHKfSN.png" width="450px" />
-  <br/>
   <br/>
   <br/>
 
 
-**Use the filter menu to only display specific events.**
+**Tap the marker and its info window to see more information about the event. Use the filter menu in the upper right corner to only display specific events.**
 
-<img src="http://i.imgur.com/aw4RveZ.png" width="450px" />
+<img src="http://i.imgur.com/1aHKfSN.png" width="400px" /> <img src="http://i.imgur.com/aw4RveZ.png" width="400px" />
   <br/>
   <br/>
   <br/>
@@ -91,15 +72,7 @@ If you need directions to the event, tap the blue arrow button in the corner to 
 
 **Tap settings and change the map style**
 
-<img src="http://i.imgur.com/cNGOEiV.png" width="450px" />
-  <br/>
-  <br/>
-  <br/>
-
-
-**Ooooh so retro**
-
-<img src="http://i.imgur.com/MYK8UGS.png" width="200px" />|<img src="http://i.imgur.com/MYK8UGS.png" width="200px" />
+<img src="http://i.imgur.com/cNGOEiV.png" width="450px" /> <img src="http://i.imgur.com/MYK8UGS.png" width="400px" />
   <br/>
   <br/>
   <br/>
