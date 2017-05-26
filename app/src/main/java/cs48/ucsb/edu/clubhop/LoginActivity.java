@@ -184,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
 		Bundle parameters = new Bundle();
 		parameters.putString("fields", desiredFields);
 		request.setParameters(parameters);
-		request.executeAsync();
+		request.executeAsync();  // dont wanna hang the main thread now do we
 		return request;
 	}
 

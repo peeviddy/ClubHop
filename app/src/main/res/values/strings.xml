@@ -2,6 +2,7 @@
     <string name="app_name">ClubHop</string>
 
     <string name="facebook_app_id">370350903324684</string>
+    <string name="google_maps_key">AIzaSyAJ61-6sGoYenAjtbWItbTcu0DGxV1E8vE</string>
     <string name="title_activity_maps">Map</string>
     <string name="Filter">Filter</string>
     <string-array name="planets_array">

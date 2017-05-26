@@ -103,8 +103,8 @@ public class UserEventsModel {
             try {
                 FacebookEvent e = new FacebookEvent();
                 e.loadJSONObject( eventArray.getJSONObject(i) );
-                if (    ( e.getLocation()!=null )//&&
-                        /*( e.getEndTime().after(rightNow) || e.getStartTime().after(rightNow) )*/)
+                if (    ( e.getLocation()!=null )&&
+                        ( e.getEndTime().after(rightNow) || e.getStartTime().after(rightNow) )) // comment this line if you wanna show past events too
                     events.add(e);
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -130,7 +130,6 @@ public class UserEventsModel {
         notifyEventListeners();
     }
     */
-
 
 
     public void initializeMarkers(GoogleMap map) {

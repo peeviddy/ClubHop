@@ -39,13 +39,13 @@
                 android:contentDescription="@string/Filter"
                 android:drawSelectorOnTop="true"
                 android:popupBackground="#e6fff2"
-                android:layout_marginEnd="17dp"
                 android:background="#e6fff2"
                 android:textAlignment="center"
                 android:clipChildren="true"
+                android:layout_marginTop="14dp"
+                android:layout_marginStart="13dp"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="16dp" />
+                android:layout_alignParentStart="true" />
         </RelativeLayout>
 
     <android.support.design.widget.NavigationView
